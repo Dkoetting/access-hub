@@ -1,0 +1,59 @@
+{
+    "branding":  {
+                     "title":  "Access Hub",
+                     "subtitle":  "Registrieren, App auswaehlen, zeitlich gueltigen Zugangslink erhalten.",
+                     "logoAlt":  "Access Hub Logo"
+                 },
+    "form":  {
+                 "emailLabel":  "E-Mail",
+                 "emailPlaceholder":  "name@firma.de",
+                 "nameLabel":  "Name (optional)",
+                 "namePlaceholder":  "Max Mustermann",
+                 "appLabel":  "App",
+                 "submit":  "Jetzt kostenpflichtig bestellen",
+                 "submitting":  "Wird gesendet ...",
+                 "priceLabel":  "Preis",
+                 "appInfoTitle":  "Was macht die App?",
+                 "appInfoFallback":  "Keine Beschreibung hinterlegt.",
+                 "windowTitle":  "Zugangs-Zeitfenster",
+                 "windowHint":  "Der Link ist nur innerhalb dieses Zeitfensters gueltig.",
+                 "countdownLabel":  "Restzeit",
+                 "confirmPaidOrder":  "Ich bestaetige die kostenpflichtige Bestellung.",
+                 "defaultLinkValidityHours":  8,
+                 "windowHintPlanned":  "Nach Bestellung ist Ihr Zugangslink innerhalb dieses Zeitfensters gueltig."
+             },
+    "messages":  {
+                     "alreadyRegistered":  "Diese E-Mail ist fuer die gewaehlte App bereits registriert. Eine weitere Anmeldung ist nicht moeglich.",
+                     "signupFailed":  "Anmeldung fehlgeschlagen.",
+                     "signupSuccessEmail":  "Anmeldung erfolgreich. Der Zugangslink wurde per E-Mail versendet.",
+                     "signupSuccessDev":  "Anmeldung erfolgreich (Dev-Modus).",
+                     "networkError":  "Netzwerkfehler. Bitte erneut versuchen.",
+                     "serverConfig":  "Server ist noch nicht vollstaendig konfiguriert. Bitte spaeter erneut versuchen.",
+                     "devLinkLabel":  "Dev-Link"
+                 },
+    "access":  {
+                   "title":  "Zugangslink pruefen",
+                   "checking":  "Link wird geprueft ...",
+                   "missingToken":  "Kein Token vorhanden.",
+                   "invalidLink":  "Zugangslink ist ungueltig.",
+                   "success":  "Link ist gueltig. Weiterleitung wird gestartet ...",
+                   "fallbackHint":  "Falls keine Weiterleitung erfolgt, diesen Link nutzen:",
+                   "networkError":  "Netzwerkfehler beim Einloesen des Links."
+               },
+    "mail":  {
+                 "subject":  "Ihr Zugangslink fuer {appName}",
+                 "greeting":  "Hallo{namePart},",
+                 "intro":  "Sie haben Zugang fuer {appName} angefordert.",
+                 "openLink":  "Zugangslink oeffnen",
+                 "ttl":  "Der Link ist {hours} Stunden gueltig und kann nur einmal verwendet werden.",
+                 "footer":  "Access Hub"
+             },
+    "apiErrors":  {
+                      "invalidPayload":  "Invalid request payload",
+                      "unknownApp":  "Unknown app",
+                      "database":  "Database error",
+                      "missingConfig":  "Server configuration missing",
+                      "alreadyRegistered":  "Already registered",
+                      "emailDeliveryFailed":  "Email delivery failed"
+                  }
+}
