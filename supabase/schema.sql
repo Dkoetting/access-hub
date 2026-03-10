@@ -6,10 +6,17 @@ create table if not exists hub_registrations (
   email_normalized text not null,
   full_name text,
   app_id text not null,
+  app_name text,
+  app_price_cents integer,
+  app_currency text,
   status text not null default 'active',
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
+
+alter table hub_registrations add column if not exists app_name text;
+alter table hub_registrations add column if not exists app_price_cents integer;
+alter table hub_registrations add column if not exists app_currency text;
 
 drop index if exists hub_registrations_unique_email_app;
 create unique index if not exists hub_registrations_unique_email_app_active

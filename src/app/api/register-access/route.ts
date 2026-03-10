@@ -1,4 +1,4 @@
-﻿import { NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { z } from 'zod'
 import { Resend } from 'resend'
 
@@ -137,6 +137,9 @@ export async function POST(request: Request) {
       email_normalized: email,
       full_name: parsed.name ?? null,
       app_id: parsed.appId,
+      app_name: app.name,
+      app_price_cents: app.oneTimePriceCents,
+      app_currency: 'EUR',
       status: 'active',
     })
     .select('id')
@@ -169,6 +172,9 @@ export async function POST(request: Request) {
       metadata: {
         email,
         app_id: parsed.appId,
+        app_name: app.name,
+        app_price_cents: app.oneTimePriceCents,
+        app_currency: 'EUR',
         created_at: nowIso,
       },
     },
@@ -228,3 +234,4 @@ export async function POST(request: Request) {
 
   return NextResponse.json({ ok: true, delivery: 'email', messageId: mailData?.id ?? null, expiresAt: expiresAt.toISOString() })
 }
+
