@@ -103,14 +103,20 @@ export async function POST(request: Request) {
   const isPermanent = permanentEmails.has(registration.email.toLowerCase())
   const sessionTtl = isPermanent ? PERMANENT_SESSION_TTL_SECONDS : DEFAULT_SESSION_TTL_SECONDS
 
-  const hubToken = signHubSession(
-    {
-      registrationId: registration.id,
-      email: registration.email,
-      appId: registration.app_id,
-    },
-    sessionTtl,
-  )
+  let hubToken: string
+  try {
+    hubToken = signHubSession(
+      {
+        registrationId: registration.id,
+        email: registration.email,
+        appId: registration.app_id,
+      },
+      sessionTtl,
+    )
+  } catch (error) {
+    console.error('[access-consume] sign session failed', error)
+    return NextResponse.json({ error: 'Server configuration missing (HUB_SIGNING_SECRET)' }, { status: 500 })
+  }
 
   const sep = app.accessUrl.includes('?') ? '&' : '?'
   const redirectUrl = `${app.accessUrl}${sep}hub_token=${encodeURIComponent(hubToken)}`
