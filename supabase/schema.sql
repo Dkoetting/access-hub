@@ -45,3 +45,27 @@ create table if not exists hub_access_events (
 
 create index if not exists hub_access_events_registration_idx
   on hub_access_events (registration_id, created_at desc);
+
+-- ─────────────────────────────────────────────────────────────────────────────
+--  hub_licenses  (Live-Lizenzen – wird bei Erstaktivierung angelegt)
+-- ─────────────────────────────────────────────────────────────────────────────
+--  license_key  : wird in .env des Kunden gespeichert; bei jedem Start online
+--                 geprüft → Revocation möglich; kein reines LICENSE_ACTIVATED=1
+--  max_gpts     : 0 = unbegrenzt; >0 = Limit (z.B. 10 für Pilot-Upgrade)
+--  status       : active | suspended | expired
+-- ─────────────────────────────────────────────────────────────────────────────
+create table if not exists hub_licenses (
+  id              uuid        primary key default gen_random_uuid(),
+  registration_id uuid        not null references hub_registrations(id) on delete cascade,
+  license_key     text        not null unique,
+  max_gpts        integer     not null default 0,
+  status          text        not null default 'active',
+  created_at      timestamptz not null default now(),
+  updated_at      timestamptz not null default now()
+);
+
+create index if not exists hub_licenses_registration_idx
+  on hub_licenses (registration_id);
+
+create unique index if not exists hub_licenses_key_idx
+  on hub_licenses (license_key);
