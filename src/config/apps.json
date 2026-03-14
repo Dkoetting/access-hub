@@ -30,5 +30,13 @@
     "oneTimePriceCents": 2500,
     "accessUrlEnv": "APP_URL_AI_TRAFFIC_SEVEN",
     "defaultAccessUrl": "https://ai-traffic-seven.vercel.app/"
+  },
+  {
+    "id": "cgpt-mover",
+    "name": "cGPT Mover",
+    "description": "ChatGPT Custom-GPT Backup Tool – exportiert alle GPTs als JSON und Excel.",
+    "oneTimePriceCents": 2900,
+    "accessUrlEnv": "APP_URL_CGPT_MOVER",
+    "defaultAccessUrl": "https://access-hub-tan.vercel.app/"
   }
 ]
