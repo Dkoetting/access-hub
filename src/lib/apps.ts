@@ -6,6 +6,8 @@ export type AppDefinition = {
   description?: string
   oneTimePriceCents: number
   accessUrl: string
+  /** true = lokales CLI-Tool (kein Web-Redirect, Token wird manuell eingegeben) */
+  cliTool?: boolean
 }
 
 type AppConfigItem = {
@@ -13,6 +15,7 @@ type AppConfigItem = {
   name: string
   description?: string
   oneTimePriceCents: number
+  cliTool?: boolean
   accessUrlEnv?: string
   defaultAccessUrl: string
 }
@@ -31,6 +34,7 @@ export function getAvailableApps(): AppDefinition[] {
     name: item.name,
     description: item.description,
     oneTimePriceCents: item.oneTimePriceCents,
+    cliTool: item.cliTool ?? false,
     accessUrl: resolveAccessUrl(item),
   }))
 }

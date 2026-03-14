@@ -36,6 +36,7 @@
     "name": "cGPT Mover",
     "description": "ChatGPT Custom-GPT Backup Tool – exportiert alle GPTs als JSON und Excel.",
     "oneTimePriceCents": 2900,
+    "cliTool": true,
     "accessUrlEnv": "APP_URL_CGPT_MOVER",
     "defaultAccessUrl": "https://access-hub-tan.vercel.app/"
   }
