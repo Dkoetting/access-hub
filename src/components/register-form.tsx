@@ -10,6 +10,7 @@ type AppOption = {
   name: string
   description?: string
   oneTimePriceCents: number
+  redirectUrl?: string
 }
 
 type Props = {
@@ -156,48 +157,58 @@ export default function RegisterForm({ apps }: Props) {
         <div className="appMeta">
           <p className="metaTitle">{content.form.appInfoTitle}</p>
           <p className="hint">{selectedApp.description ?? content.form.appInfoFallback}</p>
-          <p className="price">
-            {content.form.priceLabel}: {formatPriceEur(selectedApp.oneTimePriceCents)}
-          </p>
-        </div>
-      )}
-
-      <div className="windowMeta">
-        <p className="metaTitle">{content.form.windowTitle}</p>
-        <p className="hint">
-          {remainingSeconds !== null ? content.form.windowHint : content.form.windowHintPlanned}
-        </p>
-        <p className="countdown">
-          {content.form.countdownLabel}: {formatCountdown(displaySeconds)}
-        </p>
-      </div>
-
-      <label className="checkboxRow">
-        <input
-          type="checkbox"
-          checked={acceptPaidOrder}
-          onChange={(e) => setAcceptPaidOrder(e.target.checked)}
-          required
-        />
-        <span>{content.form.confirmPaidOrder}</span>
-      </label>
-
-      <button type="submit" className="orderButton" disabled={!canSubmit}>
-        {state.status === 'loading' ? content.form.submitting : content.form.submit}
-      </button>
-
-      {state.status === 'error' && <p className="error">{state.message}</p>}
-
-      {state.status === 'ok' && (
-        <div className="success">
-          <p>{state.message}</p>
-          {state.accessUrl && (
-            <p>
-              {content.messages.devLinkLabel}:{' '}
-              <a href={state.accessUrl}>{state.accessUrl}</a>
+          {!selectedApp.redirectUrl && (
+            <p className="price">
+              {content.form.priceLabel}: {formatPriceEur(selectedApp.oneTimePriceCents)}
             </p>
           )}
         </div>
+      )}
+
+      {selectedApp?.redirectUrl ? (
+        <a href={selectedApp.redirectUrl} className="orderButton" style={{ textAlign: 'center', textDecoration: 'none', display: 'block' }}>
+          Zur {selectedApp.name} Seite →
+        </a>
+      ) : (
+        <>
+          <div className="windowMeta">
+            <p className="metaTitle">{content.form.windowTitle}</p>
+            <p className="hint">
+              {remainingSeconds !== null ? content.form.windowHint : content.form.windowHintPlanned}
+            </p>
+            <p className="countdown">
+              {content.form.countdownLabel}: {formatCountdown(displaySeconds)}
+            </p>
+          </div>
+
+          <label className="checkboxRow">
+            <input
+              type="checkbox"
+              checked={acceptPaidOrder}
+              onChange={(e) => setAcceptPaidOrder(e.target.checked)}
+              required
+            />
+            <span>{content.form.confirmPaidOrder}</span>
+          </label>
+
+          <button type="submit" className="orderButton" disabled={!canSubmit}>
+            {state.status === 'loading' ? content.form.submitting : content.form.submit}
+          </button>
+
+          {state.status === 'error' && <p className="error">{state.message}</p>}
+
+          {state.status === 'ok' && (
+            <div className="success">
+              <p>{state.message}</p>
+              {state.accessUrl && (
+                <p>
+                  {content.messages.devLinkLabel}:{' '}
+                  <a href={state.accessUrl}>{state.accessUrl}</a>
+                </p>
+              )}
+            </div>
+          )}
+        </>
       )}
     </form>
   )

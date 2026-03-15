@@ -7,6 +7,7 @@ export default function Home() {
     name: app.name,
     description: app.description,
     oneTimePriceCents: app.oneTimePriceCents,
+    redirectUrl: (app as { redirectUrl?: string }).redirectUrl,
   }))
 
   return (

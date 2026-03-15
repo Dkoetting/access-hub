@@ -34,8 +34,9 @@
   {
     "id": "gpt-vault",
     "name": "GPT Vault",
-    "description": "Sichert alle deine ChatGPT Custom GPTs als JSON und Excel – lokal auf deinem PC.",
-    "oneTimePriceCents": 2900,
+    "description": "Sichere alle deine Custom GPTs als JSON & Excel – lokal, einmalig, sofort nutzbar. Eigene Pakete ab 4,90 €.",
+    "oneTimePriceCents": 490,
+    "redirectUrl": "/gpt-vault",
     "cliTool": true,
     "accessUrlEnv": "APP_URL_GPT_VAULT",
     "defaultAccessUrl": "https://access-hub-tan.vercel.app/gpt-vault"
