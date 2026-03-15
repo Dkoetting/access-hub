@@ -144,10 +144,19 @@ export default function GptVaultPage() {
       {/* ── Hero ────────────────────────────────────────────────────── */}
       <section className={styles.hero}>
         <div className={styles.logo}>
+          <Image
+            src="/Dr.DirKInstitute.png"
+            alt="Dr. DirKInstitute Logo"
+            width={100}
+            height={100}
+            className={styles.logoImg}
+            priority
+          />
           <div className={styles.logoBox}>
             <span className={styles.logoIcon}>🔒</span>
             <span className={styles.logoText}>GPT Vault</span>
           </div>
+          <div className={styles.logoBy}>by Dr. DirKInstitute</div>
         </div>
         <p className={styles.heroSub}>
           Sichere alle deine Custom GPTs – als JSON &amp; Excel,<br />
@@ -494,17 +503,24 @@ export default function GptVaultPage() {
       {/* ── Über den Entwickler ──────────────────────────────────────── */}
       <section className={styles.about}>
         <div className={styles.aboutInner}>
+          <Image
+            src="/Dr.DirKInstitute.png"
+            alt="Dr. DirKInstitute"
+            width={72}
+            height={72}
+            className={styles.aboutLogo}
+          />
           <div className={styles.aboutText}>
-            <strong>Entwickelt von Dirk Köttinger</strong>
+            <strong>Dr. DirKInstitute</strong>
             <p>
-              KI-Berater &amp; Automatisierungsexperte aus Bayern.
-              Ich baue praxisnahe KI-Tools für Selbstständige und kleine Teams –
-              die wirklich funktionieren und lokal laufen.
+              KI-Beratung &amp; Automatisierung für Selbstständige und kleine Teams.
+              GPT Vault ist ein Produkt von Dr. DirKInstitute –
+              praxisnah, lokal, ohne Cloud-Abhängigkeit.
             </p>
           </div>
           <div className={styles.aboutContact}>
             <a href="mailto:dirk@koetting.bayern">dirk@koetting.bayern</a>
-            <span className={styles.aboutResponse}>Antwortzeit: in der Regel innerhalb von 24h</span>
+            <span className={styles.aboutResponse}>Antwort in der Regel innerhalb von 24h</span>
           </div>
         </div>
       </section>

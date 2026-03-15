@@ -18,6 +18,19 @@
   margin-bottom: 20px;
 }
 
+.logoImg {
+  display: block;
+  margin: 0 auto 12px;
+  border-radius: 16px;
+}
+
+.logoBy {
+  font-size: 0.78rem;
+  color: #6b7280;
+  letter-spacing: 0.04em;
+  margin-top: 6px;
+}
+
 .logoBox {
   display: inline-flex;
   align-items: center;
@@ -350,6 +363,11 @@
   align-items: center;
   gap: 32px;
   flex-wrap: wrap;
+}
+
+.aboutLogo {
+  border-radius: 12px;
+  flex-shrink: 0;
 }
 
 .aboutText {
