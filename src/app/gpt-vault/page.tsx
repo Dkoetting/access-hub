@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
 import styles from './page.module.css'
 import packagesRaw from '@/config/packages.json'
 
@@ -33,6 +34,39 @@ function formatPrice(cents: number): string {
   return (cents / 100).toFixed(2).replace('.', ',') + ' €'
 }
 
+// ── FAQ Data ──────────────────────────────────────────────────────────────────
+
+const faqItems = [
+  {
+    q: 'Welche Daten werden gespeichert?',
+    a: 'Nur deine E-Mail-Adresse für die Lizenzverwaltung. Deine ChatGPT-Daten werden ausschließlich lokal auf deinem PC gespeichert.',
+  },
+  {
+    q: 'Was wird NICHT gespeichert?',
+    a: 'Dein ChatGPT-Passwort, deine GPT-Inhalte und deine Exporte. Diese Daten verlassen nie deinen Rechner.',
+  },
+  {
+    q: 'Wo liegen die Exportdateien?',
+    a: 'Direkt auf deinem PC im Ordner, den du beim Start angibst. Keine Cloud, keine Synchronisation.',
+  },
+  {
+    q: 'Braucht es API-Keys?',
+    a: 'Nein. GPT Vault nutzt einen integrierten Browser – du loggst dich einmalig wie gewohnt in ChatGPT ein.',
+  },
+  {
+    q: 'Windows oder Mac?',
+    a: 'Aktuell Windows. Mac-Version ist in Planung.',
+  },
+  {
+    q: 'Kann ich mehrmals exportieren?',
+    a: 'Ja. Mit deiner Lizenz kannst du so oft exportieren wie du willst – das Paket definiert nur die maximale GPT-Anzahl pro Export.',
+  },
+  {
+    q: 'Was passiert wenn mein Paket zu klein ist?',
+    a: 'GPT Vault sichert die ersten N GPTs deines Pakets. Du kannst jederzeit ein größeres Paket kaufen.',
+  },
+]
+
 // ── Component ─────────────────────────────────────────────────────────────────
 
 export default function GptVaultPage() {
@@ -40,6 +74,7 @@ export default function GptVaultPage() {
   const [email, setEmail]           = useState('')
   const [loading, setLoading]       = useState(false)
   const [error, setError]           = useState('')
+  const [openFaq, setOpenFaq]       = useState<number | null>(null)
 
   // Inquiry-Formulare
   const [inquiryName,    setInquiryName]    = useState('')
@@ -76,7 +111,6 @@ export default function GptVaultPage() {
     setLoading(true)
     setError('')
 
-    // Checkout-Start tracken
     await trackInquiry('checkout_start', { email, packageId: selectedPkg.id })
 
     try {
@@ -100,16 +134,14 @@ export default function GptVaultPage() {
     }
   }
 
-  // Pakete ohne Enterprise für das Haupt-Grid
-  const mainPackages       = packages.filter((p) => !p.contactOnly)
-  const enterprisePackage  = packages.find((p) => p.contactOnly)
+  const mainPackages      = packages.filter((p) => !p.contactOnly)
+  const enterprisePackage = packages.find((p) => p.contactOnly)
 
   return (
     <main className={styles.page}>
 
       {/* ── Hero ────────────────────────────────────────────────────── */}
       <section className={styles.hero}>
-        {/* Logo-Platzhalter – hier eigenes Logo-Bild einfügen */}
         <div className={styles.logo}>
           <div className={styles.logoBox}>
             <span className={styles.logoIcon}>🔒</span>
@@ -120,8 +152,12 @@ export default function GptVaultPage() {
           Sichere alle deine Custom GPTs – als JSON &amp; Excel,<br />
           lokal auf deinem PC. Einmal kaufen, für immer nutzen.
         </p>
+        <p className={styles.heroWhy}>
+          Custom GPTs lassen sich nicht nativ aus ChatGPT exportieren. Kein Backup, kein Überblick, keine Versionierung.
+          Wer mehrere GPTs verwaltet, verliert ohne Export schnell Prompts, Konfigurationen und Zeit.
+        </p>
         <p className={styles.heroHint}>
-          Ideal, wenn du mehrere Custom GPTs verwaltest und ein Backup + Inventar (Excel) brauchst.
+          GPT Vault erstellt dir lokal ein vollständiges Backup + eine Excel-Inventarliste – vollautomatisch.
         </p>
       </section>
 
@@ -144,20 +180,82 @@ export default function GptVaultPage() {
         </div>
       </section>
 
+      {/* ── Proof: Excel Screenshots ─────────────────────────────────── */}
+      <section className={styles.proof}>
+        <h2 className={styles.sectionTitle}>So sieht dein Export aus</h2>
+        <p className={styles.sectionSub}>Echter Output – keine Mockups.</p>
+
+        <div className={styles.proofGrid}>
+          <div className={styles.proofItem}>
+            <div className={styles.proofLabel}>📊 Übersicht &amp; Analyse</div>
+            <Image
+              src="/screenshots/excel-overview.png"
+              alt="Excel Übersichtsblatt mit GPT-Statistiken und farbigen Warnungen"
+              width={520}
+              height={380}
+              className={styles.proofImg}
+            />
+            <p className={styles.proofCaption}>
+              Zusammenfassung mit Statistiken, Vollständigkeitsprüfung und farbigen Hinweisen.
+            </p>
+          </div>
+          <div className={styles.proofItem}>
+            <div className={styles.proofLabel}>📋 Detailtabelle</div>
+            <Image
+              src="/screenshots/excel-detail.png"
+              alt="Excel Detailblatt mit allen GPT-Spalten"
+              width={520}
+              height={380}
+              className={styles.proofImg}
+            />
+            <p className={styles.proofCaption}>
+              Alle GPTs mit Name, System-Prompt, Aktionen, GPT-ID und direktem Link.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ── 3-Schritte-Flow ─────────────────────────────────────────── */}
+      <section className={styles.steps}>
+        <h2 className={styles.sectionTitle}>In 3 Schritten zum Backup</h2>
+        <div className={styles.stepsGrid}>
+          <div className={styles.step}>
+            <div className={styles.stepNumber}>1</div>
+            <strong>Download &amp; starten</strong>
+            <p>Nach dem Kauf erhältst du einen Aktivierungs-Code per E-Mail. ZIP entpacken, starten, Code eingeben – fertig.</p>
+          </div>
+          <div className={styles.step}>
+            <div className={styles.stepNumber}>2</div>
+            <strong>Im integrierten Browser einloggen</strong>
+            <p>GPT Vault öffnet einen eigenen Browser-Tab. Du loggst dich einmalig wie gewohnt bei ChatGPT ein.</p>
+          </div>
+          <div className={styles.step}>
+            <div className={styles.stepNumber}>3</div>
+            <strong>Export startet automatisch</strong>
+            <p>GPT Vault liest deine GPTs aus und speichert JSON + Excel lokal auf deinem PC.</p>
+          </div>
+        </div>
+        <p className={styles.trustNote}>
+          🔒 Kein ChatGPT-Passwort wird gespeichert oder übertragen. Keine Cloud-Synchronisation. Dateien bleiben auf deinem Rechner.
+        </p>
+      </section>
+
       {/* ── Pakete ──────────────────────────────────────────────────── */}
       <section className={styles.packages}>
         <h2 className={styles.sectionTitle}>Paket wählen</h2>
-        <p className={styles.sectionSub}>Wie viele Custom GPTs hast du?</p>
+        <p className={styles.sectionSub}>
+          Wie viele Custom GPTs hast du?&nbsp;
+          <span className={styles.sectionHint}>Unsicher? Nimm <strong>Plus</strong> – reicht für die meisten.</span>
+        </p>
 
-        {/* 4 Haupt-Pakete */}
         <div className={styles.grid}>
           {mainPackages.map((pkg) => (
             <div
               key={pkg.id}
               className={[
                 styles.card,
-                pkg.highlight         ? styles.cardHighlight  : '',
-                selectedId === pkg.id ? styles.cardSelected   : '',
+                pkg.highlight         ? styles.cardHighlight : '',
+                selectedId === pkg.id ? styles.cardSelected  : '',
               ].join(' ')}
               onClick={() => setSelectedId(pkg.id)}
             >
@@ -172,7 +270,6 @@ export default function GptVaultPage() {
           ))}
         </div>
 
-        {/* Enterprise – volle Breite, zentriert */}
         {enterprisePackage && (
           <div className={styles.enterpriseRow}>
             <div className={styles.enterpriseCard}>
@@ -198,7 +295,8 @@ export default function GptVaultPage() {
             {selectedPkg.name} – {formatPrice(selectedPkg.priceCents!)}
           </h2>
           <p className={styles.checkoutSub}>
-            Nach dem Kauf erhältst du deinen Aktivierungs-Token per E-Mail.
+            Du bekommst sofort deinen <strong>Aktivierungs-Code</strong> per E-Mail.<br />
+            Danach in 30 Sekunden freischalten und loslegen.
           </p>
           <input
             type="email"
@@ -214,13 +312,35 @@ export default function GptVaultPage() {
             onClick={handleBuy}
             disabled={loading || !email.trim()}
           >
-            {loading ? 'Weiterleitung...' : `Jetzt kaufen – ${formatPrice(selectedPkg.priceCents!)}`}
+            {loading ? 'Weiterleitung zu Stripe...' : `Jetzt kaufen & Aktivierungs-Code erhalten`}
           </button>
           <p className={styles.checkoutHint}>
-            🔒 Einmalkauf · kein Abo · sofort nutzbar
+            🔒 Einmalkauf · kein Abo · sofort nutzbar · Zahlung via Stripe
           </p>
         </section>
       )}
+
+      {/* ── FAQ ─────────────────────────────────────────────────────── */}
+      <section className={styles.faq}>
+        <h2 className={styles.sectionTitle}>Häufige Fragen</h2>
+        <p className={styles.sectionSub}>Besonders zu Datenschutz &amp; Sicherheit.</p>
+        <div className={styles.faqList}>
+          {faqItems.map((item, i) => (
+            <div key={i} className={styles.faqItem}>
+              <button
+                className={styles.faqQuestion}
+                onClick={() => setOpenFaq(openFaq === i ? null : i)}
+              >
+                <span>{item.q}</span>
+                <span className={styles.faqArrow}>{openFaq === i ? '▲' : '▼'}</span>
+              </button>
+              {openFaq === i && (
+                <div className={styles.faqAnswer}>{item.a}</div>
+              )}
+            </div>
+          ))}
+        </div>
+      </section>
 
       {/* ── Support & Kontakt ────────────────────────────────────────── */}
       <section className={styles.support}>
@@ -231,7 +351,6 @@ export default function GptVaultPage() {
 
         <div className={styles.supportGrid}>
 
-          {/* Terminbuchung */}
           <div className={styles.supportCard}>
             <div className={styles.supportIcon}>📅</div>
             <strong>Termin buchen</strong>
@@ -247,7 +366,6 @@ export default function GptVaultPage() {
             </a>
           </div>
 
-          {/* Geführte Session */}
           <div className={styles.supportCard}>
             <div className={styles.supportIcon}>🖥️</div>
             <strong>Geführte Session (TeamViewer)</strong>
@@ -263,7 +381,6 @@ export default function GptVaultPage() {
             </button>
           </div>
 
-          {/* E-Mail / Kontakt */}
           <div className={styles.supportCard}>
             <div className={styles.supportIcon}>✉️</div>
             <strong>Kontakt</strong>
@@ -278,7 +395,6 @@ export default function GptVaultPage() {
 
         </div>
 
-        {/* ── Inquiry-Formular (inline) ─────────────────────────── */}
         {inquiryType && !inquirySent && (
           <div className={styles.inquiryForm}>
             <h3 className={styles.inquiryTitle}>
@@ -333,9 +449,27 @@ export default function GptVaultPage() {
 
       </section>
 
+      {/* ── Über den Entwickler ──────────────────────────────────────── */}
+      <section className={styles.about}>
+        <div className={styles.aboutInner}>
+          <div className={styles.aboutText}>
+            <strong>Entwickelt von Dirk Köttinger</strong>
+            <p>
+              KI-Berater &amp; Automatisierungsexperte aus Bayern.
+              Ich baue praxisnahe KI-Tools für Selbstständige und kleine Teams –
+              die wirklich funktionieren und lokal laufen.
+            </p>
+          </div>
+          <div className={styles.aboutContact}>
+            <a href="mailto:dirk@koetting.bayern">dirk@koetting.bayern</a>
+            <span className={styles.aboutResponse}>Antwortzeit: in der Regel innerhalb von 24h</span>
+          </div>
+        </div>
+      </section>
+
       {/* ── Footer ──────────────────────────────────────────────────── */}
       <footer className={styles.footer}>
-        <p>© 2026 Dirk Köttting · <a href="mailto:dirk@koetting.bayern">dirk@koetting.bayern</a></p>
+        <p>© 2026 Dirk Köttinger · <a href="mailto:dirk@koetting.bayern">dirk@koetting.bayern</a> · Bayern, Deutschland</p>
       </footer>
 
     </main>
