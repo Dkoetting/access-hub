@@ -143,6 +143,17 @@ export default function GptVaultPage() {
 
       {/* ── Hero ────────────────────────────────────────────────────── */}
       <section className={styles.hero}>
+        {/* Hintergrund-Wasserzeichen */}
+        <Image
+          src="/logo.svg"
+          alt=""
+          width={420}
+          height={420}
+          className={styles.heroBgLogo}
+          aria-hidden="true"
+          unoptimized
+          priority
+        />
         <div className={styles.logo}>
           <Image
             src="/logo.svg"
