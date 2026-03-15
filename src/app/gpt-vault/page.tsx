@@ -277,27 +277,6 @@ export default function GptVaultPage() {
         <p className={styles.trustNote}>
           🔒 Kein ChatGPT-Passwort wird gespeichert oder übertragen. Keine Cloud-Synchronisation. Dateien bleiben auf deinem Rechner.
         </p>
-        <div className={styles.supportOffer}>
-          <span className={styles.supportOfferIcon}>🖥️</span>
-          <div>
-            <strong>Persönliche Unterstützung bei der Installation</strong>
-            <p>
-              Nicht sicher bei der Einrichtung? Einfache Hilfe per E-Mail oder Termin ist kostenlos.
-              Eine geführte TeamViewer-Session kostet <strong>19,90 €</strong>.{' '}
-              <button
-                className={styles.supportOfferLink}
-                onClick={() => {
-                  openInquiry('teamviewer')
-                  setTimeout(() => {
-                    document.getElementById('support-section')?.scrollIntoView({ behavior: 'smooth' })
-                  }, 50)
-                }}
-              >
-                Jetzt anfragen →
-              </button>
-            </p>
-          </div>
-        </div>
       </section>
 
       {/* ── Pakete ──────────────────────────────────────────────────── */}
@@ -431,7 +410,8 @@ export default function GptVaultPage() {
             <strong>Geführte Session (TeamViewer)</strong>
             <p>
               Ich installiere und richte GPT Vault gemeinsam mit dir per
-              TeamViewer ein – schnell, unkompliziert, persönlich.
+              TeamViewer ein – schnell, unkompliziert, persönlich.<br />
+              <span className={styles.supportPrice}>19,90 €</span>
             </p>
             <button
               className={styles.supportLink}
