@@ -166,8 +166,12 @@ export default function RegisterForm({ apps }: Props) {
       )}
 
       {selectedApp?.redirectUrl ? (
-        <a href={selectedApp.redirectUrl} className="orderButton" style={{ textAlign: 'center', textDecoration: 'none', display: 'block' }}>
-          Zur {selectedApp.name} Seite →
+        <a
+          href={selectedApp.redirectUrl}
+          className="orderButton"
+          style={{ textAlign: 'center', textDecoration: 'none', display: 'block' }}
+        >
+          Weiterleitung zur {selectedApp.name} →
         </a>
       ) : (
         <>

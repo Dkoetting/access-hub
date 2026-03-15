@@ -8,6 +8,8 @@ export type AppDefinition = {
   accessUrl: string
   /** true = lokales CLI-Tool (kein Web-Redirect, Token wird manuell eingegeben) */
   cliTool?: boolean
+  /** Wenn gesetzt: im Hub-Formular direkt auf diese URL weiterleiten statt normalem Flow */
+  redirectUrl?: string
 }
 
 type AppConfigItem = {
@@ -16,6 +18,7 @@ type AppConfigItem = {
   description?: string
   oneTimePriceCents: number
   cliTool?: boolean
+  redirectUrl?: string
   accessUrlEnv?: string
   defaultAccessUrl: string
 }
@@ -35,6 +38,7 @@ export function getAvailableApps(): AppDefinition[] {
     description: item.description,
     oneTimePriceCents: item.oneTimePriceCents,
     cliTool: item.cliTool ?? false,
+    redirectUrl: item.redirectUrl,
     accessUrl: resolveAccessUrl(item),
   }))
 }
