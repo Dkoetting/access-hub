@@ -141,19 +141,17 @@ export default function GptVaultPage() {
   return (
     <main className={styles.page}>
 
+      {/* ── Seiten-Wasserzeichen ─────────────────────────────────────── */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/logo.svg"
+        alt=""
+        aria-hidden="true"
+        className={styles.pageBgLogo}
+      />
+
       {/* ── Hero ────────────────────────────────────────────────────── */}
       <section className={styles.hero}>
-        {/* Hintergrund-Wasserzeichen */}
-        <Image
-          src="/logo.svg"
-          alt=""
-          width={420}
-          height={420}
-          className={styles.heroBgLogo}
-          aria-hidden="true"
-          unoptimized
-          priority
-        />
         <div className={styles.logo}>
           <Image
             src="/logo.svg"

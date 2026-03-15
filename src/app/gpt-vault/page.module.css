@@ -5,6 +5,8 @@
   max-width: 900px;
   margin: 0 auto;
   padding: 48px 24px 64px;
+  position: relative;
+  z-index: 1;
 }
 
 /* ── Hero / Logo ──────────────────────────────────────────────────────────── */
@@ -12,19 +14,18 @@
 .hero {
   text-align: center;
   margin-bottom: 48px;
-  position: relative;
-  overflow: hidden;
 }
 
-.heroBgLogo {
-  position: absolute;
+.pageBgLogo {
+  position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 420px !important;
-  height: 420px !important;
-  opacity: 0.07;
-  filter: brightness(0) invert(0.4) sepia(1) saturate(0.5) hue-rotate(200deg);
+  width: 70vw;
+  max-width: 700px;
+  height: auto;
+  opacity: 0.045;
+  filter: brightness(0) invert(1);
   pointer-events: none;
   z-index: 0;
   user-select: none;
