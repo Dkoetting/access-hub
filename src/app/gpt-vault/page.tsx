@@ -549,7 +549,15 @@ export default function GptVaultPage() {
             </p>
           </div>
           <div className={styles.aboutContact}>
-            <a href="mailto:dirk@koetting.bayern">dirk@koetting.bayern</a>
+            <button
+              className={styles.aboutContactBtn}
+              onClick={() => {
+                openInquiry('contact')
+                document.getElementById('support-section')?.scrollIntoView({ behavior: 'smooth' })
+              }}
+            >
+              GPT Vault anfragen →
+            </button>
             <span className={styles.aboutResponse}>Antwort in der Regel innerhalb von 24h</span>
           </div>
         </div>
@@ -557,7 +565,7 @@ export default function GptVaultPage() {
 
       {/* ── Footer ──────────────────────────────────────────────────── */}
       <footer className={styles.footer}>
-        <p>© 2026 Dirk Köttinger · <a href="mailto:dirk@koetting.bayern">dirk@koetting.bayern</a> · Bayern, Deutschland</p>
+        <p>© 2026 Dr. DirKInstitute · <a href="mailto:dr-dirk@dr-dirkinstitute.org">dr-dirk@dr-dirkinstitute.org</a> · Bayern, Deutschland</p>
       </footer>
 
     </main>
