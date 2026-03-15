@@ -153,14 +153,6 @@ export default function GptVaultPage() {
       {/* ── Hero ────────────────────────────────────────────────────── */}
       <section className={styles.hero}>
         <div className={styles.logo}>
-          <Image
-            src="/logo.svg"
-            alt="Dr. DirKInstitute Logo" unoptimized
-            width={100}
-            height={100}
-            className={styles.logoImg}
-            priority
-          />
           <div className={styles.logoBox}>
             <span className={styles.logoIcon}>🔒</span>
             <span className={styles.logoText}>GPT Vault</span>
@@ -290,9 +282,17 @@ export default function GptVaultPage() {
           <div>
             <strong>Persönliche Unterstützung bei der Installation</strong>
             <p>
-              Nicht sicher bei der Einrichtung? Ich helfe dir per TeamViewer oder Termin –
-              kostenlos beim Erstkauf.{' '}
-              <button className={styles.supportOfferLink} onClick={() => openInquiry('teamviewer')}>
+              Nicht sicher bei der Einrichtung? Einfache Hilfe per E-Mail oder Termin ist kostenlos.
+              Eine geführte TeamViewer-Session kostet <strong>19,90 €</strong>.{' '}
+              <button
+                className={styles.supportOfferLink}
+                onClick={() => {
+                  openInquiry('teamviewer')
+                  setTimeout(() => {
+                    document.getElementById('support-section')?.scrollIntoView({ behavior: 'smooth' })
+                  }, 50)
+                }}
+              >
                 Jetzt anfragen →
               </button>
             </p>
@@ -403,7 +403,7 @@ export default function GptVaultPage() {
       </section>
 
       {/* ── Support & Kontakt ────────────────────────────────────────── */}
-      <section className={styles.support}>
+      <section className={styles.support} id="support-section">
         <h2 className={styles.sectionTitle}>Hilfe &amp; Support</h2>
         <p className={styles.sectionSub}>
           Du brauchst Unterstützung bei der Einrichtung? Ich helfe dir persönlich.
