@@ -101,10 +101,74 @@
   text-align: left;
 }
 
+.proofImgBtn {
+  display: block;
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: zoom-in;
+  position: relative;
+}
+
+.proofImgBtn:hover .proofZoomHint {
+  opacity: 1;
+}
+
+.proofZoomHint {
+  position: absolute;
+  bottom: 8px;
+  right: 10px;
+  background: rgba(0,0,0,0.55);
+  color: #fff;
+  font-size: 0.75rem;
+  padding: 4px 10px;
+  border-radius: 20px;
+  opacity: 0;
+  transition: opacity 0.2s;
+  pointer-events: none;
+}
+
 .proofImg {
   width: 100%;
   height: auto;
   display: block;
+}
+
+/* ── Lightbox ─────────────────────────────────────────────────────────────── */
+
+.lightboxOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  cursor: pointer;
+}
+
+.lightboxClose {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  background: rgba(255,255,255,0.15);
+  padding: 6px 14px;
+  border-radius: 20px;
+}
+
+.lightboxImg {
+  max-width: 95vw;
+  max-height: 90vh;
+  border-radius: 8px;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.5);
+  cursor: default;
 }
 
 .proofCaption {
@@ -173,7 +237,48 @@
   padding: 12px 20px;
   font-size: 0.88rem;
   color: #166534;
+  margin: 0 0 16px;
+}
+
+.supportOffer {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  background: #fff8ed;
+  border: 1px solid #fed7aa;
+  border-radius: 12px;
+  padding: 16px 20px;
+}
+
+.supportOfferIcon {
+  font-size: 1.6rem;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.supportOffer strong {
+  display: block;
+  font-size: 0.92rem;
+  color: #92400e;
+  margin-bottom: 4px;
+}
+
+.supportOffer p {
   margin: 0;
+  font-size: 0.85rem;
+  color: #78350f;
+  line-height: 1.5;
+}
+
+.supportOfferLink {
+  background: none;
+  border: none;
+  color: #b45309;
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
 }
 
 /* ── FAQ ──────────────────────────────────────────────────────────────────── */

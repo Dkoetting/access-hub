@@ -55,7 +55,7 @@ const faqItems = [
   },
   {
     q: 'Windows oder Mac?',
-    a: 'Aktuell Windows. Mac-Version ist in Planung.',
+    a: 'Windows & Mac werden unterstützt.',
   },
   {
     q: 'Kann ich mehrmals exportieren?',
@@ -74,7 +74,8 @@ export default function GptVaultPage() {
   const [email, setEmail]           = useState('')
   const [loading, setLoading]       = useState(false)
   const [error, setError]           = useState('')
-  const [openFaq, setOpenFaq]       = useState<number | null>(null)
+  const [openFaq,      setOpenFaq]      = useState<number | null>(null)
+  const [lightboxSrc,  setLightboxSrc]  = useState<string | null>(null)
 
   // Inquiry-Formulare
   const [inquiryName,    setInquiryName]    = useState('')
@@ -180,34 +181,62 @@ export default function GptVaultPage() {
         </div>
       </section>
 
+      {/* ── Lightbox ────────────────────────────────────────────────── */}
+      {lightboxSrc && (
+        <div className={styles.lightboxOverlay} onClick={() => setLightboxSrc(null)}>
+          <div className={styles.lightboxClose}>✕ Schließen</div>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={lightboxSrc}
+            alt="Vergrößerte Ansicht"
+            className={styles.lightboxImg}
+            onClick={(e) => e.stopPropagation()}
+          />
+        </div>
+      )}
+
       {/* ── Proof: Excel Screenshots ─────────────────────────────────── */}
       <section className={styles.proof}>
         <h2 className={styles.sectionTitle}>So sieht dein Export aus</h2>
-        <p className={styles.sectionSub}>Echter Output – keine Mockups.</p>
+        <p className={styles.sectionSub}>Echter Output – keine Mockups. Zum Vergrößern anklicken.</p>
 
         <div className={styles.proofGrid}>
           <div className={styles.proofItem}>
             <div className={styles.proofLabel}>📊 Übersicht &amp; Analyse</div>
-            <Image
-              src="/screenshots/excel-overview.png"
-              alt="Excel Übersichtsblatt mit GPT-Statistiken und farbigen Warnungen"
-              width={520}
-              height={380}
-              className={styles.proofImg}
-            />
+            <button
+              className={styles.proofImgBtn}
+              onClick={() => setLightboxSrc('/screenshots/excel-overview.png')}
+              title="Zum Vergrößern klicken"
+            >
+              <Image
+                src="/screenshots/excel-overview.png"
+                alt="Excel Übersichtsblatt mit GPT-Statistiken und farbigen Warnungen"
+                width={900}
+                height={660}
+                className={styles.proofImg}
+              />
+              <span className={styles.proofZoomHint}>🔍 Klicken zum Vergrößern</span>
+            </button>
             <p className={styles.proofCaption}>
               Zusammenfassung mit Statistiken, Vollständigkeitsprüfung und farbigen Hinweisen.
             </p>
           </div>
           <div className={styles.proofItem}>
             <div className={styles.proofLabel}>📋 Detailtabelle</div>
-            <Image
-              src="/screenshots/excel-detail.png"
-              alt="Excel Detailblatt mit allen GPT-Spalten"
-              width={520}
-              height={380}
-              className={styles.proofImg}
-            />
+            <button
+              className={styles.proofImgBtn}
+              onClick={() => setLightboxSrc('/screenshots/excel-detail.png')}
+              title="Zum Vergrößern klicken"
+            >
+              <Image
+                src="/screenshots/excel-detail.png"
+                alt="Excel Detailblatt mit allen GPT-Spalten"
+                width={900}
+                height={660}
+                className={styles.proofImg}
+              />
+              <span className={styles.proofZoomHint}>🔍 Klicken zum Vergrößern</span>
+            </button>
             <p className={styles.proofCaption}>
               Alle GPTs mit Name, System-Prompt, Aktionen, GPT-ID und direktem Link.
             </p>
@@ -238,6 +267,19 @@ export default function GptVaultPage() {
         <p className={styles.trustNote}>
           🔒 Kein ChatGPT-Passwort wird gespeichert oder übertragen. Keine Cloud-Synchronisation. Dateien bleiben auf deinem Rechner.
         </p>
+        <div className={styles.supportOffer}>
+          <span className={styles.supportOfferIcon}>🖥️</span>
+          <div>
+            <strong>Persönliche Unterstützung bei der Installation</strong>
+            <p>
+              Nicht sicher bei der Einrichtung? Ich helfe dir per TeamViewer oder Termin –
+              kostenlos beim Erstkauf.{' '}
+              <button className={styles.supportOfferLink} onClick={() => openInquiry('teamviewer')}>
+                Jetzt anfragen →
+              </button>
+            </p>
+          </div>
+        </div>
       </section>
 
       {/* ── Pakete ──────────────────────────────────────────────────── */}
