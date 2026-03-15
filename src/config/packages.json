@@ -1,0 +1,48 @@
+[
+  {
+    "id": "mini",
+    "name": "Mini",
+    "gpts": 5,
+    "priceCents": 490,
+    "currency": "EUR",
+    "description": "Bis zu 5 GPTs sichern",
+    "highlight": false
+  },
+  {
+    "id": "starter",
+    "name": "Starter",
+    "gpts": 10,
+    "priceCents": 890,
+    "currency": "EUR",
+    "description": "Bis zu 10 GPTs sichern",
+    "highlight": false
+  },
+  {
+    "id": "plus",
+    "name": "Plus",
+    "gpts": 15,
+    "priceCents": 1290,
+    "currency": "EUR",
+    "description": "Bis zu 15 GPTs sichern",
+    "highlight": true
+  },
+  {
+    "id": "pro",
+    "name": "Pro",
+    "gpts": 20,
+    "priceCents": 1690,
+    "currency": "EUR",
+    "description": "Bis zu 20 GPTs sichern",
+    "highlight": false
+  },
+  {
+    "id": "enterprise",
+    "name": "Enterprise",
+    "gpts": null,
+    "priceCents": null,
+    "currency": "EUR",
+    "description": "Mehr als 20 GPTs – Preis auf Anfrage",
+    "highlight": false,
+    "contactOnly": true
+  }
+]

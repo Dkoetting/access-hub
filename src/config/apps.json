@@ -38,6 +38,6 @@
     "oneTimePriceCents": 2900,
     "cliTool": true,
     "accessUrlEnv": "APP_URL_GPT_VAULT",
-    "defaultAccessUrl": "https://access-hub-tan.vercel.app/"
+    "defaultAccessUrl": "https://access-hub-tan.vercel.app/gpt-vault"
   }
 ]
