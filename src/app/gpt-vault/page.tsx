@@ -145,8 +145,8 @@ export default function GptVaultPage() {
       <section className={styles.hero}>
         <div className={styles.logo}>
           <Image
-            src="/Dr.DirKInstitute.png"
-            alt="Dr. DirKInstitute Logo"
+            src="/logo.svg"
+            alt="Dr. DirKInstitute Logo" unoptimized
             width={100}
             height={100}
             className={styles.logoImg}
@@ -504,8 +504,8 @@ export default function GptVaultPage() {
       <section className={styles.about}>
         <div className={styles.aboutInner}>
           <Image
-            src="/Dr.DirKInstitute.png"
-            alt="Dr. DirKInstitute"
+            src="/logo.svg"
+            alt="Dr. DirKInstitute" unoptimized
             width={72}
             height={72}
             className={styles.aboutLogo}
