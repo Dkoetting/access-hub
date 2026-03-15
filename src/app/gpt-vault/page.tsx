@@ -34,6 +34,21 @@ function formatPrice(cents: number): string {
   return (cents / 100).toFixed(2).replace('.', ',') + ' €'
 }
 
+// ── Workflow Steps ────────────────────────────────────────────────────────────
+
+const workflowSteps = [
+  { file: 'Bild_1_Zip__alles_extrahieren.png',                              caption: 'ZIP entpacken' },
+  { file: 'Bild_2_Laufwerk_wählen.png',                                     caption: 'Laufwerk wählen' },
+  { file: 'Bild_3_GPT_VAULT_kopiert.png',                                   caption: 'GPT Vault kopiert' },
+  { file: 'Bild_4_Ordner_öffnen_Start_bat auswählen.png',                   caption: 'Start.bat auswählen' },
+  { file: 'Bild_5_Startbildchirm_email_chatgpt eingeben_.png',              caption: 'E-Mail & ChatGPT-Konto eingeben' },
+  { file: 'Bild_6_int_browser wird geoeffnet.png',                          caption: 'Integrierter Browser startet' },
+  { file: 'Bild_7_int_browser öffnent sich_einloggen chatgpt.png',          caption: 'Bei ChatGPT einloggen' },
+  { file: 'Bild_8_system scrollt durch due cGPTs.png',                      caption: 'System liest alle GPTs aus' },
+  { file: 'Bild_9_Laden der DEtails der cGPTS_.png',                        caption: 'Details werden geladen' },
+  { file: 'Bild_10_json files der cGPTs im gewählten InstallationsOrdner.png', caption: 'JSON-Dateien gespeichert' },
+]
+
 // ── FAQ Data ──────────────────────────────────────────────────────────────────
 
 const faqItems = [
@@ -277,6 +292,32 @@ export default function GptVaultPage() {
         <p className={styles.trustNote}>
           🔒 Kein ChatGPT-Passwort wird gespeichert oder übertragen. Keine Cloud-Synchronisation. Dateien bleiben auf deinem Rechner.
         </p>
+      </section>
+
+      {/* ── Workflow-Galerie ─────────────────────────────────────────── */}
+      <section className={styles.workflow}>
+        <h2 className={styles.sectionTitle}>So läuft es ab – Schritt für Schritt</h2>
+        <p className={styles.sectionSub}>Echte Screenshots aus dem Pilottest. Zum Vergrößern anklicken.</p>
+        <div className={styles.workflowGrid}>
+          {workflowSteps.map((step, i) => (
+            <button
+              key={i}
+              className={styles.workflowItem}
+              onClick={() => setLightboxSrc(`/screenshots/Workflow/${encodeURIComponent(step.file)}`)}
+              title="Zum Vergrößern klicken"
+            >
+              <div className={styles.workflowStepBadge}>{i + 1}</div>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={`/screenshots/Workflow/${encodeURIComponent(step.file)}`}
+                alt={step.caption}
+                className={styles.workflowImg}
+                loading="lazy"
+              />
+              <div className={styles.workflowCaption}>{step.caption}</div>
+            </button>
+          ))}
+        </div>
       </section>
 
       {/* ── Pakete ──────────────────────────────────────────────────── */}
