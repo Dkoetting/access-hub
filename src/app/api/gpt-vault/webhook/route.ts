@@ -184,7 +184,7 @@ export async function POST(request: Request) {
         <p style="color:#6b7280;font-size:12px;">
           Dein Paket: GPT Vault – ${packageId} (max. ${maxGpts} GPTs)<br/>
           Token gültig für ${TTL_HOURS} Stunden.<br/>
-          Bei Fragen: dirk@koetting.bayern
+          Bei Fragen: dr-dirk@dr-dirkinstitute.org
         </p>
       `,
     }).catch((err) => {
