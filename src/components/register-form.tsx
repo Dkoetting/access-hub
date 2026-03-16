@@ -1,7 +1,7 @@
 "use client"
 
 import Image from 'next/image'
-import { FormEvent, useEffect, useState } from 'react'
+import { FormEvent, useState } from 'react'
 import { formatPriceEur } from '@/lib/apps'
 import { getHubContent } from '@/lib/hub-content'
 
@@ -20,94 +20,39 @@ type Props = {
 type SubmitState =
   | { status: 'idle' }
   | { status: 'loading' }
-  | { status: 'ok'; message: string; accessUrl?: string; expiresAt?: string }
   | { status: 'error'; message: string }
-
-function formatCountdown(totalSeconds: number): string {
-  const safe = Math.max(0, totalSeconds)
-  const hours = Math.floor(safe / 3600)
-  const minutes = Math.floor((safe % 3600) / 60)
-  const seconds = safe % 60
-  return [hours, minutes, seconds].map((n) => String(n).padStart(2, '0')).join(':')
-}
 
 export default function RegisterForm({ apps }: Props) {
   const content = getHubContent()
 
   const [email, setEmail] = useState('')
-  const [name, setName] = useState('')
+  const [name, setName]   = useState('')
   const [appId, setAppId] = useState(apps[0]?.id ?? '')
-  const [acceptPaidOrder, setAcceptPaidOrder] = useState(false)
   const [state, setState] = useState<SubmitState>({ status: 'idle' })
-  const [nowMs, setNowMs] = useState(() => Date.now())
 
   const selectedApp = apps.find((app) => app.id === appId)
-  const canSubmit =
-    email.trim().length > 3 && appId.length > 0 && acceptPaidOrder && state.status !== 'loading'
-  const activeExpiresAt = state.status === 'ok' ? state.expiresAt : undefined
-
-  useEffect(() => {
-    if (!activeExpiresAt) return
-
-    const timer = setInterval(() => {
-      setNowMs(Date.now())
-    }, 1000)
-
-    return () => clearInterval(timer)
-  }, [activeExpiresAt])
-
-  let remainingSeconds: number | null = null
-  if (activeExpiresAt) {
-    const expiresAtMs = new Date(activeExpiresAt).getTime()
-    if (!Number.isNaN(expiresAtMs)) {
-      remainingSeconds = Math.max(0, Math.floor((expiresAtMs - nowMs) / 1000))
-    }
-  }
-
-  const defaultWindowHours = Number(content.form.defaultLinkValidityHours ?? 8)
-  const defaultWindowSeconds = Math.max(0, Math.floor(defaultWindowHours * 60 * 60))
-  const displaySeconds = remainingSeconds ?? defaultWindowSeconds
+  const canSubmit   = email.trim().length > 3 && appId.length > 0 && state.status !== 'loading'
 
   async function onSubmit(event: FormEvent) {
     event.preventDefault()
     setState({ status: 'loading' })
 
     try {
-      const response = await fetch('/api/register-access', {
-        method: 'POST',
+      const res  = await fetch('/api/access-hub/checkout', {
+        method:  'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, name: name.trim() || undefined, appId }),
+        body:    JSON.stringify({ appId, email: email.trim(), name: name.trim() || undefined }),
       })
+      const data = await res.json().catch(() => ({}))
 
-      const payload = await response.json().catch(() => ({}))
-
-      if (response.status === 409) {
-        setState({ status: 'error', message: content.messages.alreadyRegistered })
+      if (!res.ok || !data.url) {
+        setState({ status: 'error', message: data.error ?? 'Fehler – bitte erneut versuchen.' })
         return
       }
 
-      if (!response.ok) {
-        setState({ status: 'error', message: payload.error ?? content.messages.signupFailed })
-        return
-      }
-
-      if (payload.delivery === 'dev_preview') {
-        setState({
-          status: 'ok',
-          message: content.messages.signupSuccessDev,
-          accessUrl: payload.accessUrl,
-          expiresAt: payload.expiresAt,
-        })
-        return
-      }
-
-      setState({
-        status: 'ok',
-        message: content.messages.signupSuccessEmail,
-        expiresAt: payload.expiresAt,
-      })
+      window.location.href = data.url
     } catch {
-      setState({ status: 'error', message: content.messages.networkError })
+      setState({ status: 'error', message: 'Keine Verbindung – bitte erneut versuchen.' })
     }
   }
 
@@ -175,43 +120,11 @@ export default function RegisterForm({ apps }: Props) {
         </a>
       ) : (
         <>
-          <div className="windowMeta">
-            <p className="metaTitle">{content.form.windowTitle}</p>
-            <p className="hint">
-              {remainingSeconds !== null ? content.form.windowHint : content.form.windowHintPlanned}
-            </p>
-            <p className="countdown">
-              {content.form.countdownLabel}: {formatCountdown(displaySeconds)}
-            </p>
-          </div>
-
-          <label className="checkboxRow">
-            <input
-              type="checkbox"
-              checked={acceptPaidOrder}
-              onChange={(e) => setAcceptPaidOrder(e.target.checked)}
-              required
-            />
-            <span>{content.form.confirmPaidOrder}</span>
-          </label>
-
           <button type="submit" className="orderButton" disabled={!canSubmit}>
-            {state.status === 'loading' ? content.form.submitting : content.form.submit}
+            {state.status === 'loading' ? 'Weiterleitung zu Stripe…' : 'Jetzt kaufen & Zugang erhalten'}
           </button>
 
           {state.status === 'error' && <p className="error">{state.message}</p>}
-
-          {state.status === 'ok' && (
-            <div className="success">
-              <p>{state.message}</p>
-              {state.accessUrl && (
-                <p>
-                  {content.messages.devLinkLabel}:{' '}
-                  <a href={state.accessUrl}>{state.accessUrl}</a>
-                </p>
-              )}
-            </div>
-          )}
         </>
       )}
     </form>
