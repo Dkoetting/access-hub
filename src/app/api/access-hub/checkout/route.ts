@@ -5,7 +5,7 @@ import { findAppById } from '@/lib/apps'
 
 const requestSchema = z.object({
   appId: z.string().trim().min(1).max(64),
-  email: z.string().email().max(320).optional(),
+  email: z.email().max(320).optional(),
   name:  z.string().trim().max(120).optional(),
 })
 
