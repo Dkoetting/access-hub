@@ -232,39 +232,6 @@ const workflowSteps = [
   { file: 'Bild_10_json files der cGPTs im gewählten InstallationsOrdner.png', caption: 'JSON-Dateien gespeichert' },
 ]
 
-// ── FAQ Data ──────────────────────────────────────────────────────────────────
-
-const faqItems = [
-  {
-    q: 'Welche Daten werden gespeichert?',
-    a: 'Nur deine E-Mail-Adresse für die Lizenzverwaltung. Deine ChatGPT-Daten werden ausschließlich lokal auf deinem PC gespeichert.',
-  },
-  {
-    q: 'Was wird NICHT gespeichert?',
-    a: 'Dein ChatGPT-Passwort, deine GPT-Inhalte und deine Exporte. Diese Daten verlassen nie deinen Rechner.',
-  },
-  {
-    q: 'Wo liegen die Exportdateien?',
-    a: 'Direkt auf deinem PC im Ordner, den du beim Start angibst. Keine Cloud, keine Synchronisation.',
-  },
-  {
-    q: 'Braucht es API-Keys?',
-    a: 'Nein. GPT Vault nutzt einen integrierten Browser – du loggst dich einmalig wie gewohnt in ChatGPT ein.',
-  },
-  {
-    q: 'Windows oder Mac?',
-    a: 'Windows & Mac werden unterstützt.',
-  },
-  {
-    q: 'Kann ich mehrmals exportieren?',
-    a: 'Ja. Mit deiner Lizenz kannst du so oft exportieren wie du willst – das Paket definiert nur die maximale GPT-Anzahl pro Export.',
-  },
-  {
-    q: 'Was passiert wenn mein Paket zu klein ist?',
-    a: 'GPT Vault sichert die ersten N GPTs deines Pakets. Du kannst jederzeit ein größeres Paket kaufen.',
-  },
-]
-
 // ── Component ─────────────────────────────────────────────────────────────────
 
 export default function GptVaultPage() {
@@ -303,6 +270,7 @@ export default function GptVaultPage() {
       name:    inquiryName,
       email:   inquiryEmail,
       message: inquiryMessage,
+      lang,
     })
     setInquiryLoading(false)
     setInquirySent(true)
@@ -332,14 +300,14 @@ export default function GptVaultPage() {
       const data = await res.json()
 
       if (!res.ok || !data.url) {
-        setError(data.error ?? 'Fehler beim Checkout – bitte erneut versuchen.')
+        setError(data.error ?? t.checkoutError)
         setLoading(false)
         return
       }
 
       window.location.href = data.url
     } catch {
-      setError('Keine Verbindung – bitte erneut versuchen.')
+      setError(t.checkoutNoConn)
       setLoading(false)
     }
   }
@@ -349,6 +317,18 @@ export default function GptVaultPage() {
 
   return (
     <main className={styles.page}>
+
+      {/* ── Language Toggle ──────────────────────────────────────────── */}
+      <div className={styles.langToggle}>
+        <button
+          className={lang === 'de' ? styles.langActive : styles.langBtn}
+          onClick={() => toggleLang('de')}
+        >🇩🇪 DE</button>
+        <button
+          className={lang === 'en' ? styles.langActive : styles.langBtn}
+          onClick={() => toggleLang('en')}
+        >🇬🇧 EN</button>
+      </div>
 
       {/* ── Seiten-Wasserzeichen ─────────────────────────────────────── */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -368,46 +348,38 @@ export default function GptVaultPage() {
           </div>
           <div className={styles.logoBy}>by Dr. DirKInstitute</div>
         </div>
-        <p className={styles.heroSub}>
-          Sichere alle deine Custom GPTs – als JSON &amp; Excel,<br />
-          lokal auf deinem PC. Einmal kaufen, für immer nutzen.
-        </p>
-        <p className={styles.heroWhy}>
-          Custom GPTs lassen sich nicht nativ aus ChatGPT exportieren. Kein Backup, kein Überblick, keine Versionierung.
-          Wer mehrere GPTs verwaltet, verliert ohne Export schnell Prompts, Konfigurationen und Zeit.
-        </p>
-        <p className={styles.heroHint}>
-          GPT Vault erstellt dir lokal ein vollständiges Backup + eine Excel-Inventarliste – vollautomatisch.
-        </p>
+        <p className={styles.heroSub}>{t.heroSub}</p>
+        <p className={styles.heroWhy}>{t.heroWhy}</p>
+        <p className={styles.heroHint}>{t.heroHint}</p>
       </section>
 
       {/* ── Features ────────────────────────────────────────────────── */}
       <section className={styles.features}>
         <div className={styles.feature}>
           <span className={styles.featureIcon}>⚡</span>
-          <strong>Vollautomatisch</strong>
-          <p>Startet lokal, öffnet den Login im integrierten Browser und erstellt den Export automatisch.</p>
+          <strong>{t.featTitle1}</strong>
+          <p>{t.featDesc1}</p>
         </div>
         <div className={styles.feature}>
           <span className={styles.featureIcon}>📁</span>
-          <strong>Lokal gespeichert</strong>
-          <p>JSON + Excel auf deinem PC. Kein Cloud-Abo, keine Abhängigkeit. Dateien bleiben auf deinem Rechner.</p>
+          <strong>{t.featTitle2}</strong>
+          <p>{t.featDesc2}</p>
         </div>
         <div className={styles.feature}>
           <span className={styles.featureIcon}>🔄</span>
-          <strong>Beliebig oft nutzbar</strong>
-          <p>Einmal kaufen – so oft exportieren wie du willst.</p>
+          <strong>{t.featTitle3}</strong>
+          <p>{t.featDesc3}</p>
         </div>
       </section>
 
       {/* ── Lightbox ────────────────────────────────────────────────── */}
       {lightboxSrc && (
         <div className={styles.lightboxOverlay} onClick={() => setLightboxSrc(null)}>
-          <div className={styles.lightboxClose}>✕ Schließen</div>
+          <div className={styles.lightboxClose}>{t.lightboxClose}</div>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={lightboxSrc}
-            alt="Vergrößerte Ansicht"
+            alt={t.lightboxAlt}
             className={styles.lightboxImg}
             onClick={(e) => e.stopPropagation()}
           />
@@ -416,12 +388,12 @@ export default function GptVaultPage() {
 
       {/* ── Proof: Excel Screenshots ─────────────────────────────────── */}
       <section className={styles.proof}>
-        <h2 className={styles.sectionTitle}>So sieht dein Export aus</h2>
-        <p className={styles.sectionSub}>Echter Output – keine Mockups. Zum Vergrößern anklicken.</p>
+        <h2 className={styles.sectionTitle}>{t.proofTitle}</h2>
+        <p className={styles.sectionSub}>{t.proofSub}</p>
 
         <div className={styles.proofGrid}>
           <div className={styles.proofItem}>
-            <div className={styles.proofLabel}>📊 Übersicht &amp; Analyse</div>
+            <div className={styles.proofLabel}>{t.proofLabel1}</div>
             <button
               className={styles.proofImgBtn}
               onClick={() => setLightboxSrc('/screenshots/excel-overview.png')}
@@ -429,19 +401,17 @@ export default function GptVaultPage() {
             >
               <Image
                 src="/screenshots/excel-overview.png"
-                alt="Excel Übersichtsblatt mit GPT-Statistiken und farbigen Warnungen"
+                alt={t.proofLabel1}
                 width={900}
                 height={660}
                 className={styles.proofImg}
               />
-              <span className={styles.proofZoomHint}>🔍 Klicken zum Vergrößern</span>
+              <span className={styles.proofZoomHint}>{t.proofZoom}</span>
             </button>
-            <p className={styles.proofCaption}>
-              Zusammenfassung mit Statistiken, Vollständigkeitsprüfung und farbigen Hinweisen.
-            </p>
+            <p className={styles.proofCaption}>{t.proofCaption1}</p>
           </div>
           <div className={styles.proofItem}>
-            <div className={styles.proofLabel}>📋 Detailtabelle</div>
+            <div className={styles.proofLabel}>{t.proofLabel2}</div>
             <button
               className={styles.proofImgBtn}
               onClick={() => setLightboxSrc('/screenshots/excel-detail.png')}
@@ -449,49 +419,45 @@ export default function GptVaultPage() {
             >
               <Image
                 src="/screenshots/excel-detail.png"
-                alt="Excel Detailblatt mit allen GPT-Spalten"
+                alt={t.proofLabel2}
                 width={900}
                 height={660}
                 className={styles.proofImg}
               />
-              <span className={styles.proofZoomHint}>🔍 Klicken zum Vergrößern</span>
+              <span className={styles.proofZoomHint}>{t.proofZoom}</span>
             </button>
-            <p className={styles.proofCaption}>
-              Alle GPTs mit Name, System-Prompt, Aktionen, GPT-ID und direktem Link.
-            </p>
+            <p className={styles.proofCaption}>{t.proofCaption2}</p>
           </div>
         </div>
       </section>
 
       {/* ── 3-Schritte-Flow ─────────────────────────────────────────── */}
       <section className={styles.steps}>
-        <h2 className={styles.sectionTitle}>In 3 Schritten zum Backup</h2>
+        <h2 className={styles.sectionTitle}>{t.stepsTitle}</h2>
         <div className={styles.stepsGrid}>
           <div className={styles.step}>
             <div className={styles.stepNumber}>1</div>
-            <strong>Download &amp; starten</strong>
-            <p>Nach dem Kauf erhältst du einen Aktivierungs-Code per E-Mail. ZIP entpacken, starten, Code eingeben – fertig.</p>
+            <strong>{t.step1Title}</strong>
+            <p>{t.step1Desc}</p>
           </div>
           <div className={styles.step}>
             <div className={styles.stepNumber}>2</div>
-            <strong>Im integrierten Browser einloggen</strong>
-            <p>GPT Vault öffnet einen eigenen Browser-Tab. Du loggst dich einmalig wie gewohnt bei ChatGPT ein.</p>
+            <strong>{t.step2Title}</strong>
+            <p>{t.step2Desc}</p>
           </div>
           <div className={styles.step}>
             <div className={styles.stepNumber}>3</div>
-            <strong>Export startet automatisch</strong>
-            <p>GPT Vault liest deine GPTs aus und speichert JSON + Excel lokal auf deinem PC.</p>
+            <strong>{t.step3Title}</strong>
+            <p>{t.step3Desc}</p>
           </div>
         </div>
-        <p className={styles.trustNote}>
-          🔒 Kein ChatGPT-Passwort wird gespeichert oder übertragen. Keine Cloud-Synchronisation. Dateien bleiben auf deinem Rechner.
-        </p>
+        <p className={styles.trustNote}>{t.trustNote}</p>
       </section>
 
       {/* ── Workflow-Galerie ─────────────────────────────────────────── */}
       <section className={styles.workflow}>
-        <h2 className={styles.sectionTitle}>So läuft es ab – Schritt für Schritt</h2>
-        <p className={styles.sectionSub}>Echte Screenshots aus dem Pilottest. Zum Vergrößern anklicken.</p>
+        <h2 className={styles.sectionTitle}>{t.workflowTitle}</h2>
+        <p className={styles.sectionSub}>{t.workflowSub}</p>
         <div className={styles.workflowGrid}>
           {workflowSteps.map((step, i) => (
             <button
@@ -504,11 +470,11 @@ export default function GptVaultPage() {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={`/screenshots/Workflow/${encodeURIComponent(step.file)}`}
-                alt={step.caption}
+                alt={t.workflowCaptions[i]}
                 className={styles.workflowImg}
                 loading="lazy"
               />
-              <div className={styles.workflowCaption}>{step.caption}</div>
+              <div className={styles.workflowCaption}>{t.workflowCaptions[i]}</div>
             </button>
           ))}
         </div>
@@ -516,10 +482,10 @@ export default function GptVaultPage() {
 
       {/* ── Pakete ──────────────────────────────────────────────────── */}
       <section className={styles.packages}>
-        <h2 className={styles.sectionTitle}>Paket wählen</h2>
+        <h2 className={styles.sectionTitle}>{t.packagesTitle}</h2>
         <p className={styles.sectionSub}>
-          Wie viele Custom GPTs hast du?&nbsp;
-          <span className={styles.sectionHint}>Unsicher? Nimm <strong>Plus</strong> – reicht für die meisten.</span>
+          {t.packagesSub}&nbsp;
+          <span className={styles.sectionHint}>{t.packagesHint}</span>
         </p>
 
         <div className={styles.grid}>
@@ -533,12 +499,12 @@ export default function GptVaultPage() {
               ].join(' ')}
               onClick={() => setSelectedId(pkg.id)}
             >
-              {pkg.highlight && <div className={styles.badge}>Beliebt</div>}
+              {pkg.highlight && <div className={styles.badge}>{t.packagesBadge}</div>}
               <div className={styles.cardName}>{pkg.name}</div>
-              <div className={styles.cardGpts}>bis zu {pkg.gpts} GPTs</div>
+              <div className={styles.cardGpts}>{t.packagesUpTo} {pkg.gpts} {t.packagesGpts}</div>
               <div className={styles.cardPrice}>{formatPrice(pkg.priceCents!)}</div>
               <div className={styles.cardSelect}>
-                {selectedId === pkg.id ? '✓ Ausgewählt' : 'Wählen'}
+                {selectedId === pkg.id ? t.packagesSelected : t.packagesSelect}
               </div>
             </div>
           ))}
@@ -548,14 +514,12 @@ export default function GptVaultPage() {
           <div className={styles.enterpriseRow}>
             <div className={styles.enterpriseCard}>
               <div className={styles.enterpriseName}>Enterprise</div>
-              <div className={styles.enterpriseDesc}>
-                Mehr als 20 GPTs? Wir finden gemeinsam die passende Lösung.
-              </div>
+              <div className={styles.enterpriseDesc}>{t.enterpriseDesc}</div>
               <button
                 className={styles.enterpriseLink}
                 onClick={() => openInquiry('enterprise')}
               >
-                Anfrage senden →
+                {t.enterpriseCta}
               </button>
             </div>
           </div>
@@ -568,13 +532,10 @@ export default function GptVaultPage() {
           <h2 className={styles.checkoutTitle}>
             {selectedPkg.name} – {formatPrice(selectedPkg.priceCents!)}
           </h2>
-          <p className={styles.checkoutSub}>
-            Du bekommst sofort deinen <strong>Aktivierungs-Code</strong> per E-Mail.<br />
-            Danach in 30 Sekunden freischalten und loslegen.
-          </p>
+          <p className={styles.checkoutSub}>{t.checkoutSub}</p>
           <input
             type="email"
-            placeholder="Deine E-Mail-Adresse"
+            placeholder={t.checkoutEmail}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className={styles.emailInput}
@@ -586,20 +547,18 @@ export default function GptVaultPage() {
             onClick={handleBuy}
             disabled={loading || !email.trim()}
           >
-            {loading ? 'Weiterleitung zu Stripe...' : `Jetzt kaufen & Aktivierungs-Code erhalten`}
+            {loading ? t.checkoutLoading : t.checkoutCta}
           </button>
-          <p className={styles.checkoutHint}>
-            🔒 Einmalkauf · kein Abo · sofort nutzbar · Zahlung via Stripe
-          </p>
+          <p className={styles.checkoutHint}>{t.checkoutHint}</p>
         </section>
       )}
 
       {/* ── FAQ ─────────────────────────────────────────────────────── */}
       <section className={styles.faq}>
-        <h2 className={styles.sectionTitle}>Häufige Fragen</h2>
-        <p className={styles.sectionSub}>Besonders zu Datenschutz &amp; Sicherheit.</p>
+        <h2 className={styles.sectionTitle}>{t.faqTitle}</h2>
+        <p className={styles.sectionSub}>{t.faqSub}</p>
         <div className={styles.faqList}>
-          {faqItems.map((item, i) => (
+          {t.faqItems.map((item, i) => (
             <div key={i} className={styles.faqItem}>
               <button
                 className={styles.faqQuestion}
@@ -618,17 +577,15 @@ export default function GptVaultPage() {
 
       {/* ── Support & Kontakt ────────────────────────────────────────── */}
       <section className={styles.support} id="support-section">
-        <h2 className={styles.sectionTitle}>Hilfe &amp; Support</h2>
-        <p className={styles.sectionSub}>
-          Du brauchst Unterstützung bei der Einrichtung? Ich helfe dir persönlich.
-        </p>
+        <h2 className={styles.sectionTitle}>{t.supportTitle}</h2>
+        <p className={styles.sectionSub}>{t.supportSub}</p>
 
         <div className={styles.supportGrid}>
 
           <div className={styles.supportCard}>
             <div className={styles.supportIcon}>📅</div>
-            <strong>Termin buchen</strong>
-            <p>Kostenloses Erstgespräch oder Beratungstermin direkt online buchen.</p>
+            <strong>{t.support1Title}</strong>
+            <p>{t.support1Desc}</p>
             <a
               href="https://terminbuchung-ten.vercel.app/"
               target="_blank"
@@ -636,35 +593,34 @@ export default function GptVaultPage() {
               className={styles.supportLink}
               onClick={() => trackInquiry('booking_click', {})}
             >
-              Termin buchen →
+              {t.support1Cta}
             </a>
           </div>
 
           <div className={styles.supportCard}>
             <div className={styles.supportIcon}>🖥️</div>
-            <strong>Geführte Session (TeamViewer)</strong>
+            <strong>{t.support2Title}</strong>
             <p>
-              Ich installiere und richte GPT Vault gemeinsam mit dir per
-              TeamViewer ein – schnell, unkompliziert, persönlich.<br />
+              {t.support2Desc}<br />
               <span className={styles.supportPrice}>19,90 €</span>
             </p>
             <button
               className={styles.supportLink}
               onClick={() => openInquiry('teamviewer')}
             >
-              Session anfragen →
+              {t.support2Cta}
             </button>
           </div>
 
           <div className={styles.supportCard}>
             <div className={styles.supportIcon}>✉️</div>
-            <strong>Kontakt</strong>
-            <p>Fragen, Probleme oder Feedback – ich antworte persönlich.</p>
+            <strong>{t.support3Title}</strong>
+            <p>{t.support3Desc}</p>
             <button
               className={styles.supportLink}
               onClick={() => openInquiry('contact')}
             >
-              Nachricht senden →
+              {t.support3Cta}
             </button>
           </div>
 
@@ -673,26 +629,26 @@ export default function GptVaultPage() {
         {inquiryType && !inquirySent && (
           <div className={styles.inquiryForm}>
             <h3 className={styles.inquiryTitle}>
-              {inquiryType === 'teamviewer' && '🖥️ Geführte Session anfragen'}
-              {inquiryType === 'contact'    && '✉️ Nachricht senden'}
-              {inquiryType === 'enterprise' && '🏢 Enterprise-Anfrage'}
+              {inquiryType === 'teamviewer' && t.inquiryTeamviewer}
+              {inquiryType === 'contact'    && t.inquiryContact}
+              {inquiryType === 'enterprise' && t.inquiryEnterprise}
             </h3>
             <input
               type="text"
-              placeholder="Dein Name"
+              placeholder={t.inquiryName}
               value={inquiryName}
               onChange={(e) => setInquiryName(e.target.value)}
               className={styles.emailInput}
             />
             <input
               type="email"
-              placeholder="Deine E-Mail-Adresse *"
+              placeholder={t.inquiryEmail}
               value={inquiryEmail}
               onChange={(e) => setInquiryEmail(e.target.value)}
               className={styles.emailInput}
             />
             <textarea
-              placeholder="Deine Nachricht (optional)"
+              placeholder={t.inquiryMessage}
               value={inquiryMessage}
               onChange={(e) => setInquiryMessage(e.target.value)}
               className={styles.textarea}
@@ -704,13 +660,13 @@ export default function GptVaultPage() {
                 onClick={handleInquiry}
                 disabled={inquiryLoading || !inquiryEmail.trim()}
               >
-                {inquiryLoading ? 'Wird gesendet...' : 'Anfrage senden'}
+                {inquiryLoading ? t.inquirySending : t.inquirySend}
               </button>
               <button
                 className={styles.cancelButton}
                 onClick={() => setInquiryType(null)}
               >
-                Abbrechen
+                {t.inquiryCancel}
               </button>
             </div>
           </div>
@@ -718,7 +674,7 @@ export default function GptVaultPage() {
 
         {inquirySent && (
           <div className={styles.inquirySuccess}>
-            ✅ Danke! Ich melde mich so schnell wie möglich bei dir.
+            {t.inquirySuccess}
           </div>
         )}
 
@@ -735,12 +691,8 @@ export default function GptVaultPage() {
             className={styles.aboutLogo}
           />
           <div className={styles.aboutText}>
-            <strong>Dr. DirKInstitute</strong>
-            <p>
-              KI-Beratung &amp; Automatisierung für Selbstständige und kleine Teams.
-              GPT Vault ist ein Produkt von Dr. DirKInstitute –
-              praxisnah, lokal, ohne Cloud-Abhängigkeit.
-            </p>
+            <strong>{t.aboutCompany}</strong>
+            <p>{t.aboutDesc}</p>
           </div>
           <div className={styles.aboutContact}>
             <button
@@ -750,16 +702,16 @@ export default function GptVaultPage() {
                 document.getElementById('support-section')?.scrollIntoView({ behavior: 'smooth' })
               }}
             >
-              GPT Vault anfragen →
+              {t.aboutCta}
             </button>
-            <span className={styles.aboutResponse}>Antwort in der Regel innerhalb von 24h</span>
+            <span className={styles.aboutResponse}>{t.aboutResp}</span>
           </div>
         </div>
       </section>
 
       {/* ── Footer ──────────────────────────────────────────────────── */}
       <footer className={styles.footer}>
-        <p>© 2026 Dr. DirKInstitute · <a href="mailto:dr-dirk@dr-dirkinstitute.org">dr-dirk@dr-dirkinstitute.org</a> · Bayern, Deutschland</p>
+        <p>© 2026 Dr. DirKInstitute · <a href="mailto:dr-dirk@dr-dirkinstitute.org">dr-dirk@dr-dirkinstitute.org</a> · {lang === 'de' ? 'Bayern, Deutschland' : 'Bavaria, Germany'}</p>
       </footer>
 
     </main>
