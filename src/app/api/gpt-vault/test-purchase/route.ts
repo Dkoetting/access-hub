@@ -4,6 +4,7 @@ import { z } from 'zod'
 import { randomUUID } from 'crypto'
 
 import { getSupabaseAdmin } from '@/lib/supabase-admin'
+import { getGptVaultDownloadUrl } from '@/lib/gpt-vault-download'
 import { generatePlainToken, hashToken } from '@/lib/tokens'
 import packagesRaw from '@/config/packages.json'
 
@@ -159,6 +160,7 @@ export async function POST(request: Request) {
   const fromEmail = process.env.RESEND_FROM_EMAIL ?? 'onboarding@resend.dev'
   const baseUrl   = process.env.NEXT_PUBLIC_HUB_BASE_URL ?? 'https://access-hub-tan.vercel.app'
   const activationUrl = `${baseUrl}/access?token=${encodeURIComponent(plainToken)}`
+  const downloadUrl = getGptVaultDownloadUrl()
 
   let mailSent = false
   if (resendKey) {
@@ -168,19 +170,22 @@ export async function POST(request: Request) {
     const { error: mailError } = await resend.emails.send({
       from:    fromEmail,
       to:      email,
-      subject: '[TEST] GPT Vault – dein Aktivierungs-Token',
+      subject: '[TEST] GPT Vault – your download & activation token',
       html: `
-        <p>Hallo${greeting},</p>
-        <p>das ist ein <strong>Test-Kauf</strong> für GPT Vault.</p>
-        <p>Starte GPT Vault und gib diesen Token ein:</p>
+        <p>Hello${greeting},</p>
+        <p>this is a <strong>test purchase</strong> for GPT Vault.</p>
+        <p><strong>Step 1 – Download GPT Vault:</strong></p>
+        <p><a href="${downloadUrl}" style="font-weight:bold;">→ Download GPT Vault (ZIP)</a></p>
+        <p><strong>Step 2 – Activate:</strong></p>
+        <p>Start GPT Vault and enter this token when prompted:</p>
         <p style="font-family:monospace;font-size:16px;background:#f3f4f6;padding:12px;border-radius:6px;">
           ${plainToken}
         </p>
-        <p><a href="${activationUrl}">→ Direkt aktivieren</a></p>
+        <p><a href="${activationUrl}">→ Activate directly</a></p>
         <p style="color:#6b7280;font-size:12px;">
-          Paket: ${pkg.name} – max. ${pkg.gpts} GPTs<br/>
-          Token gültig bis: ${expiresAt.toLocaleString('de-DE')}<br/>
-          ⚠ Dies ist ein Test – keine echte Zahlung.
+          Package: ${pkg.name} – max. ${pkg.gpts} GPTs<br/>
+          Token valid until: ${expiresAt.toLocaleString('de-DE')}<br/>
+          ⚠ This is a test – no real payment.
         </p>
       `,
     })

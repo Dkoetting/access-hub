@@ -4,6 +4,7 @@ import { Resend } from 'resend'
 import { randomUUID } from 'crypto'
 
 import { getSupabaseAdmin } from '@/lib/supabase-admin'
+import { getGptVaultDownloadUrl } from '@/lib/gpt-vault-download'
 import { generatePlainToken, hashToken } from '@/lib/tokens'
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -155,9 +156,10 @@ export async function POST(request: Request) {
   ])
 
   // 8. Aktivierungs-Mail senden
-  const resendKey = process.env.RESEND_API_KEY
-  const fromEmail = process.env.RESEND_FROM_EMAIL ?? 'onboarding@resend.dev'
-  const baseUrl   = process.env.NEXT_PUBLIC_HUB_BASE_URL ?? 'https://access-hub-tan.vercel.app'
+  const resendKey   = process.env.RESEND_API_KEY
+  const fromEmail   = process.env.RESEND_FROM_EMAIL ?? 'onboarding@resend.dev'
+  const baseUrl     = process.env.NEXT_PUBLIC_HUB_BASE_URL ?? 'https://access-hub-tan.vercel.app'
+  const downloadUrl = getGptVaultDownloadUrl()
   const activationUrl = `${baseUrl}/access?token=${encodeURIComponent(plainToken)}`
 
   if (resendKey) {
@@ -167,24 +169,27 @@ export async function POST(request: Request) {
     await resend.emails.send({
       from:    fromEmail,
       to:      email,
-      subject: 'GPT Vault – dein Aktivierungs-Token',
+      subject: 'GPT Vault – your download & activation token',
       html: `
-        <p>Hallo${name},</p>
-        <p>vielen Dank für deinen Kauf von <strong>GPT Vault</strong>!</p>
+        <p>Hello${name},</p>
+        <p>thank you for purchasing <strong>GPT Vault</strong>!</p>
+        <p><strong>Step 1 – Download GPT Vault:</strong></p>
         <p>
-          Starte GPT Vault auf deinem PC und gib folgenden Token ein,
-          oder klicke direkt auf den Link:
+          <a href="${downloadUrl}" style="font-weight:bold;">→ Download GPT Vault (ZIP)</a>
         </p>
+        <p><strong>Step 2 – Activate:</strong></p>
+        <p>Start GPT Vault and enter the following token when prompted,<br/>
+        or click the activation link:</p>
         <p style="font-family:monospace;font-size:16px;background:#f3f4f6;padding:12px;border-radius:6px;">
           ${plainToken}
         </p>
         <p>
-          <a href="${activationUrl}" style="font-weight:bold;">→ Direkt aktivieren</a>
+          <a href="${activationUrl}" style="font-weight:bold;">→ Activate directly</a>
         </p>
         <p style="color:#6b7280;font-size:12px;">
-          Dein Paket: GPT Vault – ${packageId} (max. ${maxGpts} GPTs)<br/>
-          Token gültig für ${TTL_HOURS} Stunden.<br/>
-          Bei Fragen: dr-dirk@dr-dirkinstitute.org
+          Your package: GPT Vault – ${packageId} (max. ${maxGpts} GPTs)<br/>
+          Token valid for ${TTL_HOURS} hours.<br/>
+          Questions? dr-dirk@dr-dirkinstitute.org
         </p>
       `,
     }).catch((err) => {

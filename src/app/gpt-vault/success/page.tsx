@@ -1,6 +1,9 @@
 import styles from './page.module.css'
+import { getGptVaultDownloadUrl } from '@/lib/gpt-vault-download'
 
 export default function GptVaultSuccessPage() {
+  const downloadUrl = getGptVaultDownloadUrl()
+
   return (
     <main className={styles.page}>
       <div className={styles.card}>
@@ -30,7 +33,7 @@ export default function GptVaultSuccessPage() {
                 Lade die aktuelle Version herunter und entpacke das ZIP auf deinem PC.
               </p>
               <a
-                href="https://drive.google.com/file/d/1elsv6G2dadd-B-5Q0pNe0C6tcOgCDIyB/view"
+                href={downloadUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className={styles.downloadLink}
