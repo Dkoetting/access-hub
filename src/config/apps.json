@@ -34,5 +34,23 @@
     "cliTool": true,
     "accessUrlEnv": "APP_URL_GPT_VAULT",
     "defaultAccessUrl": "https://gpt-vault-theta.vercel.app"
+  },
+  {
+    "id": "eu-ai-act-navigator",
+    "name": "EU AI Act Navigator",
+    "description": "KI-Anwendungsfall prüfen – Risikoklasse, Pflichten, Compliance-Check nach EU AI Act.",
+    "oneTimePriceCents": 2900,
+    "maxUses": 1,
+    "accessUrlEnv": "APP_URL_EU_AI_ACT_NAVIGATOR",
+    "defaultAccessUrl": "https://eu-ai-act-navigator-nine.vercel.app/"
+  },
+  {
+    "id": "be-ai-safe",
+    "name": "AI Safe Policy Generator",
+    "description": "Erstellt eine maßgeschneiderte KI-Richtlinie für dein Unternehmen – einmalig, sofort einsetzbar.",
+    "oneTimePriceCents": 4900,
+    "maxUses": 1,
+    "accessUrlEnv": "APP_URL_BE_AI_SAFE",
+    "defaultAccessUrl": "https://be-ai-safe.vercel.app/de"
   }
 ]
