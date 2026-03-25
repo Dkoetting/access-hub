@@ -47,6 +47,11 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'missing_metadata' }, { status: 400 })
   }
 
+  // Session purchases are handled entirely by gpt-vault's own webhook
+  if (session.metadata?.package_id === 'session') {
+    return NextResponse.json({ received: true })
+  }
+
   const app = findAppById(appId)
   if (!app) {
     console.error('[access-hub/webhook] Unbekannte App:', appId)
