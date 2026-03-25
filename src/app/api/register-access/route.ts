@@ -25,6 +25,7 @@ type ExistingLinkRow = {
   registration_id: string
   expires_at: string
   created_at: string
+  used_at: string | null
 }
 
 export async function POST(request: Request) {
@@ -74,7 +75,7 @@ export async function POST(request: Request) {
   if (registrationIds.length > 0) {
     const { data: links, error: linksError } = await supabase
       .from('hub_access_links')
-      .select('registration_id, expires_at, created_at')
+      .select('registration_id, expires_at, created_at, used_at')
       .in('registration_id', registrationIds)
       .order('created_at', { ascending: false })
 
@@ -107,6 +108,20 @@ export async function POST(request: Request) {
       },
       { status: 409 },
     )
+  }
+
+  // Single-use apps: block if the link was already consumed (used_at set)
+  if (app.maxUses === 1) {
+    const alreadyUsed = registrations.some((reg) => {
+      const link = latestLinkByRegistrationId.get(reg.id)
+      return link?.used_at != null
+    })
+    if (alreadyUsed) {
+      return NextResponse.json(
+        { error: 'Diese App kann nur einmal genutzt werden. / This app can only be used once.', code: 'MAX_USES_REACHED' },
+        { status: 403 },
+      )
+    }
   }
 
   const expiredRegistrationIds = registrations

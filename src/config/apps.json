@@ -1,17 +1,10 @@
 [
   {
-    "id": "dr-dir-k-institute-book-creator",
-    "name": "Book Creator",
-    "description": "Automatisiert Dokumente | Publikation erstellen, BITTE den Output verifizieren, HI nutzen!",
-    "oneTimePriceCents": 3900,
-    "accessUrlEnv": "APP_URL_BOOK_CREATOR",
-    "defaultAccessUrl": "https://dr-dir-k-institute-book-creator.vercel.app/"
-  },
-  {
     "id": "k-kausale-kompetenz-test",
     "name": "Kausale Kompetenz Test",
     "description": "K² Kausale Kompetenz Test - die Fähigkeit, autonome KI-Entscheidungen E2E zu durchdringen.",
     "oneTimePriceCents": 2900,
+    "maxUses": 1,
     "accessUrlEnv": "APP_URL_KAUSALE_KOMPETENZ_TEST",
     "defaultAccessUrl": "https://k-kausale-kompetenz-test.vercel.app/"
   },
@@ -20,6 +13,7 @@
     "name": "KI ROI Rechner",
     "description": "Berechnet wirtschaftlichen Nutzen von KI-Investitionen.",
     "oneTimePriceCents": 1900,
+    "maxUses": 1,
     "accessUrlEnv": "APP_URL_KI_ROI_RECHNER",
     "defaultAccessUrl": "https://ki-roi-rechner.vercel.app/"
   },
@@ -36,9 +30,9 @@
     "name": "GPT Vault",
     "description": "Sichere alle deine Custom GPTs als JSON & Excel – lokal, einmalig, sofort nutzbar. Eigene Pakete ab 4,90 €.",
     "oneTimePriceCents": 490,
-    "redirectUrl": "/gpt-vault",
+    "redirectUrl": "https://gpt-vault-theta.vercel.app",
     "cliTool": true,
     "accessUrlEnv": "APP_URL_GPT_VAULT",
-    "defaultAccessUrl": "https://access-hub-tan.vercel.app/gpt-vault"
+    "defaultAccessUrl": "https://gpt-vault-theta.vercel.app"
   }
 ]

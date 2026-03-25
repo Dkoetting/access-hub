@@ -10,6 +10,8 @@ export type AppDefinition = {
   cliTool?: boolean
   /** Wenn gesetzt: im Hub-Formular direkt auf diese URL weiterleiten statt normalem Flow */
   redirectUrl?: string
+  /** Maximale Nutzungen pro Registrierung – 1 = einmalig, undefined = unbegrenzt */
+  maxUses?: number
 }
 
 type AppConfigItem = {
@@ -19,6 +21,7 @@ type AppConfigItem = {
   oneTimePriceCents: number
   cliTool?: boolean
   redirectUrl?: string
+  maxUses?: number
   accessUrlEnv?: string
   defaultAccessUrl: string
 }
@@ -39,6 +42,7 @@ export function getAvailableApps(): AppDefinition[] {
     oneTimePriceCents: item.oneTimePriceCents,
     cliTool: item.cliTool ?? false,
     redirectUrl: item.redirectUrl,
+    maxUses: item.maxUses,
     accessUrl: resolveAccessUrl(item),
   }))
 }
