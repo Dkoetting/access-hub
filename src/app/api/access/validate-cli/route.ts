@@ -132,7 +132,21 @@ async function handleLicenseCheck(rawBody: unknown) {
     return NextResponse.json({ valid: false, error: 'wrong_app' }, { status: 403 })
   }
 
-  // 3. Event loggen (asynchron – Fehler ignorieren)
+  // 3. Beste Entitlements über alle aktiven Lizenzen der Registration ermitteln
+  // (Schutz gegen doppelt angelegte Lizenzen bei mehrfachen Käufen)
+  const { data: bestLicense } = await supabase
+    .from('hub_licenses')
+    .select('max_gpts, max_projects')
+    .eq('registration_id', registration.id)
+    .eq('status', 'active')
+    .order('max_projects', { ascending: false })
+    .limit(1)
+    .maybeSingle()
+
+  const effectiveMaxGpts     = Math.max(license.max_gpts ?? 0, bestLicense?.max_gpts ?? 0)
+  const effectiveMaxProjects = Math.max(license.max_projects ?? 0, bestLicense?.max_projects ?? 0)
+
+  // 4. Event loggen (asynchron – Fehler ignorieren)
   void supabase.from('hub_access_events').insert({
     registration_id: registration.id,
     event_type: 'cli_license_checked',
@@ -143,8 +157,8 @@ async function handleLicenseCheck(rawBody: unknown) {
     valid:         true,
     customer_name: registration.full_name ?? '',
     ...buildEntitlementPayload(body.app_id, {
-      max_gpts: license.max_gpts,
-      max_projects: license.max_projects,
+      max_gpts: effectiveMaxGpts,
+      max_projects: effectiveMaxProjects,
     }),
   })
 }
