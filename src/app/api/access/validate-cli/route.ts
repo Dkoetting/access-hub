@@ -219,11 +219,14 @@ async function handleActivation(rawBody: unknown) {
   }
 
   // 5. Bestehende Lizenz für diese Registration prüfen (Idempotenz)
+  // .limit(1) + order by created_at desc → neueste Lizenz bei mehrfachen Käufen
   const { data: existingLicense } = await supabase
     .from('hub_licenses')
     .select('license_key, max_gpts, max_projects')
     .eq('registration_id', registration.id)
     .eq('status', 'active')
+    .order('created_at', { ascending: false })
+    .limit(1)
     .maybeSingle()
 
   let licenseKey: string
