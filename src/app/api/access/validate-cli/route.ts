@@ -132,19 +132,16 @@ async function handleLicenseCheck(rawBody: unknown) {
     return NextResponse.json({ valid: false, error: 'wrong_app' }, { status: 403 })
   }
 
-  // 3. Beste Entitlements über alle aktiven Lizenzen der Registration ermitteln
-  // (Schutz gegen doppelt angelegte Lizenzen bei mehrfachen Käufen)
-  const { data: bestLicense } = await supabase
+  // 3. Summe aller aktiven Lizenzen der Registration ermitteln
+  // Projekte werden einzeln abgerechnet → mehrfache Käufe addieren sich
+  const { data: allLicenses } = await supabase
     .from('hub_licenses')
     .select('max_gpts, max_projects')
     .eq('registration_id', registration.id)
     .eq('status', 'active')
-    .order('max_projects', { ascending: false })
-    .limit(1)
-    .maybeSingle()
 
-  const effectiveMaxGpts     = Math.max(license.max_gpts ?? 0, bestLicense?.max_gpts ?? 0)
-  const effectiveMaxProjects = Math.max(license.max_projects ?? 0, bestLicense?.max_projects ?? 0)
+  const effectiveMaxGpts     = (allLicenses ?? []).reduce((sum, l) => sum + (l.max_gpts     ?? 0), 0)
+  const effectiveMaxProjects = (allLicenses ?? []).reduce((sum, l) => sum + (l.max_projects ?? 0), 0)
 
   // 4. Event loggen (asynchron – Fehler ignorieren)
   void supabase.from('hub_access_events').insert({
