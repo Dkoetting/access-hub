@@ -22,10 +22,6 @@
 }
 
 .headerLogoWrap {
-  background: rgba(255,255,255,0.95);
-  border: 1px solid rgba(255,255,255,0.6);
-  border-radius: 8px;
-  padding: 6px 12px;
   display: flex;
   align-items: center;
 }
@@ -35,6 +31,7 @@
   width: auto;
   max-width: 160px;
   object-fit: contain;
+  border-radius: 6px;
 }
 
 .headerLogoRight {
@@ -42,7 +39,7 @@
   width: auto;
   max-width: 120px;
   object-fit: contain;
-  border-radius: 0;
+  border-radius: 6px;
 }
 
 /* ── Hero ────────────────────────────────────────────────────────────────── */
