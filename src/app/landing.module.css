@@ -41,6 +41,7 @@
   object-fit: contain;
   border-radius: 6px;
   mix-blend-mode: screen;
+  filter: brightness(3) contrast(0.9);
 }
 
 /* ── Hero ────────────────────────────────────────────────────────────────── */
