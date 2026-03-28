@@ -5,6 +5,7 @@ import { randomUUID } from 'crypto'
 
 import { getSupabaseAdmin } from '@/lib/supabase-admin'
 import { getGptVaultDownloadUrl } from '@/lib/gpt-vault-download'
+import { getGptVaultProjectDownloadUrl } from '@/lib/gpt-vault-project-download'
 import { generatePlainToken, hashToken } from '@/lib/tokens'
 import packagesRaw from '@/config/packages.json'
 
@@ -37,6 +38,7 @@ const packages = packagesRaw as Package[]
 const requestSchema = z.object({
   secret:    z.string().min(1),
   packageId: z.string().min(1).max(32),
+  projectCount: z.number().int().min(1).max(500).optional(),
   email:     z.string().email().max(320),
   name:      z.string().max(120).optional(),
 })
@@ -75,13 +77,33 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'wrong_secret' }, { status: 401 })
   }
 
-  // 3. Paket suchen
-  const pkg = packages.find((p) => p.id === body.packageId)
-  if (!pkg || pkg.contactOnly || pkg.gpts === null) {
-    return NextResponse.json(
-      { error: 'unknown_package', available: packages.filter((p) => !p.contactOnly).map((p) => p.id) },
-      { status: 400 },
-    )
+  // 3. Produkt bestimmen
+  const PRICE_PER_PROJECT_CENTS = 120
+  let appId = 'gpt-vault'
+  let appName = 'GPT Vault'
+  let purchaseLabel = ''
+  let maxGpts = 0
+  let maxProjects = 0
+  let priceCents = 0
+
+  if (body.packageId === 'projects') {
+    const count = body.projectCount ?? 1
+    appId = 'gpt-vault-project'
+    appName = 'GPT Vault Projects'
+    purchaseLabel = `${count} Project${count === 1 ? '' : 's'}`
+    maxProjects = count
+    priceCents = count * PRICE_PER_PROJECT_CENTS
+  } else {
+    const pkg = packages.find((p) => p.id === body.packageId)
+    if (!pkg || pkg.contactOnly || pkg.gpts === null) {
+      return NextResponse.json(
+        { error: 'unknown_package', available: [...packages.filter((p) => !p.contactOnly).map((p) => p.id), 'projects'] },
+        { status: 400 },
+      )
+    }
+    purchaseLabel = pkg.name
+    maxGpts = pkg.gpts
+    priceCents = pkg.priceCents ?? 0
   }
 
   const supabase = getSupabaseAdmin()
@@ -95,9 +117,9 @@ export async function POST(request: Request) {
       email:            email,
       email_normalized: email,
       full_name:        body.name ?? null,
-      app_id:           'gpt-vault',
-      app_name:         'GPT Vault',
-      app_price_cents:  pkg.priceCents ?? 0,
+      app_id:           appId,
+      app_name:         appName,
+      app_price_cents:  priceCents,
       app_currency:     'EUR',
       status:           'active',
     })
@@ -117,7 +139,8 @@ export async function POST(request: Request) {
     .insert({
       registration_id: registration.id,
       license_key:     licenseKey,
-      max_gpts:        pkg.gpts,
+      max_gpts:        maxGpts,
+      max_projects:    maxProjects,
       status:          'active',
     })
 
@@ -149,8 +172,10 @@ export async function POST(request: Request) {
     registration_id: registration.id,
     event_type:      'test_purchase',
     metadata: {
-      package_id:  pkg.id,
-      max_gpts:    pkg.gpts,
+      app_id:       appId,
+      package_id:   body.packageId,
+      max_gpts:     maxGpts,
+      max_projects: maxProjects,
       created_at:  nowIso,
     },
   })
@@ -160,7 +185,17 @@ export async function POST(request: Request) {
   const fromEmail = process.env.RESEND_FROM_EMAIL ?? 'onboarding@resend.dev'
   const baseUrl   = process.env.NEXT_PUBLIC_HUB_BASE_URL ?? 'https://access-hub-tan.vercel.app'
   const activationUrl = `${baseUrl}/access?token=${encodeURIComponent(plainToken)}`
-  const downloadUrl = getGptVaultDownloadUrl()
+  const isProjectFlow = appId === 'gpt-vault-project'
+  const downloadUrl = isProjectFlow ? getGptVaultProjectDownloadUrl() : getGptVaultDownloadUrl()
+  const subject = isProjectFlow
+    ? '[TEST] GPT Vault Projects – your download & activation token'
+    : '[TEST] GPT Vault – your download & activation token'
+  const productLabel = isProjectFlow ? 'GPT Vault Projects' : 'GPT Vault'
+  const downloadLabel = isProjectFlow ? 'Download GPT Vault Projects (ZIP)' : 'Download GPT Vault (ZIP)'
+  const stepLabel = isProjectFlow ? 'Download GPT Vault Projects' : 'Download GPT Vault'
+  const summaryLine = isProjectFlow
+    ? `Projects: ${maxProjects}`
+    : `Package: ${purchaseLabel} – max. ${maxGpts} GPTs`
 
   let mailSent = false
   if (resendKey) {
@@ -170,12 +205,12 @@ export async function POST(request: Request) {
     const { error: mailError } = await resend.emails.send({
       from:    fromEmail,
       to:      email,
-      subject: '[TEST] GPT Vault – your download & activation token',
+      subject,
       html: `
         <p>Hello${greeting},</p>
-        <p>this is a <strong>test purchase</strong> for GPT Vault.</p>
-        <p><strong>Step 1 – Download GPT Vault:</strong></p>
-        <p><a href="${downloadUrl}" style="font-weight:bold;">→ Download GPT Vault (ZIP)</a></p>
+        <p>this is a <strong>test purchase</strong> for ${productLabel}.</p>
+        <p><strong>Step 1 – ${stepLabel}:</strong></p>
+        <p><a href="${downloadUrl}" style="font-weight:bold;">→ ${downloadLabel}</a></p>
         <p><strong>Step 2 – Activate:</strong></p>
         <p>Start GPT Vault and enter this token when prompted:</p>
         <p style="font-family:monospace;font-size:16px;background:#f3f4f6;padding:12px;border-radius:6px;">
@@ -183,7 +218,7 @@ export async function POST(request: Request) {
         </p>
         <p><a href="${activationUrl}">→ Activate directly</a></p>
         <p style="color:#6b7280;font-size:12px;">
-          Package: ${pkg.name} – max. ${pkg.gpts} GPTs<br/>
+          ${summaryLine}<br/>
           Token valid until: ${expiresAt.toLocaleString('de-DE')}<br/>
           ⚠ This is a test – no real payment.
         </p>
@@ -199,8 +234,10 @@ export async function POST(request: Request) {
   // 9. Response – Token auch direkt zurückgeben (für Tests ohne Mail)
   return NextResponse.json({
     ok:             true,
-    package:        pkg.id,
-    max_gpts:       pkg.gpts,
+    app_id:         appId,
+    package:        body.packageId,
+    max_gpts:       maxGpts,
+    max_projects:   maxProjects,
     license_key:    licenseKey,
     token:          plainToken,          // ← direkt nutzbar in main.py
     activation_url: activationUrl,

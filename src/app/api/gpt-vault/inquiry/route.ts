@@ -102,7 +102,7 @@ export async function POST(req: NextRequest) {
         <hr style="margin:20px 0;border:none;border-top:1px solid #e5e7eb">
         <p style="font-size:0.9em;color:#374151">
           ${txt.confirmSign}<br>
-          <b>Dirk Köttinger</b><br>
+          <b>Dr. Dirk Kötting</b><br>
           Dr. DirKInstitute · <a href="mailto:${FROM_EMAIL}" style="color:#1d4ed8">${FROM_EMAIL}</a>
         </p>
         <p style="font-size:0.75em;color:#9ca3af">${txt.confirmTagline}</p>

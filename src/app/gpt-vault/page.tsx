@@ -97,6 +97,17 @@ const translations = {
     aboutResp:    'Antwort in der Regel innerhalb von 24h',
     lightboxClose: '✕ Schließen',
     lightboxAlt:   'Vergrößerte Ansicht',
+    projTitle:    'ChatGPT Projekte sichern',
+    projSub:      'Wie viele Projekte hast du? Gib die Anzahl ein – der Preis wird automatisch berechnet.',
+    projLabel:    'Anzahl deiner ChatGPT-Projekte',
+    projPer:      '1,20 € pro Projekt',
+    projTotal:    'Gesamtpreis:',
+    projCta:      'Jetzt kaufen & Code erhalten',
+    projLoading:  'Weiterleitung zu Stripe...',
+    projHint:     '🔒 Einmalkauf · kein Abo · sofort nutzbar · Zahlung via Stripe',
+    projError:    'Fehler beim Checkout – bitte erneut versuchen.',
+    projNoConn:   'Keine Verbindung – bitte erneut versuchen.',
+    projEmail:    'Deine E-Mail-Adresse',
   },
   en: {
     heroSub:  'Back up all your Custom GPTs – as JSON & Excel,\nlocally on your PC. Buy once, use forever.',
@@ -185,6 +196,17 @@ const translations = {
     aboutResp:    'Response usually within 24 hours',
     lightboxClose: '✕ Close',
     lightboxAlt:   'Enlarged view',
+    projTitle:    'Back up ChatGPT Projects',
+    projSub:      'How many projects do you have? Enter the number – the price is calculated automatically.',
+    projLabel:    'Number of your ChatGPT Projects',
+    projPer:      '€1.20 per Project',
+    projTotal:    'Total:',
+    projCta:      'Buy now & receive code',
+    projLoading:  'Redirecting to Stripe...',
+    projHint:     '🔒 One-time purchase · no subscription · instant access · payment via Stripe',
+    projError:    'Checkout error – please try again.',
+    projNoConn:   'No connection – please try again.',
+    projEmail:    'Your email address',
   },
 }
 
@@ -250,6 +272,12 @@ export default function GptVaultPage() {
   const [inquirySent,    setInquirySent]    = useState(false)
   const [inquiryLoading, setInquiryLoading] = useState(false)
 
+  // Projects
+  const [projectCount,   setProjectCount]   = useState(1)
+  const [projectEmail,   setProjectEmail]   = useState('')
+  const [projectLoading, setProjectLoading] = useState(false)
+  const [projectError,   setProjectError]   = useState('')
+
   const [lang, setLang] = useState<Lang>(() => {
     if (typeof window === 'undefined') return 'de'
     return (localStorage.getItem('gpt-vault-lang') as Lang) ?? 'de'
@@ -312,6 +340,30 @@ export default function GptVaultPage() {
     }
   }
 
+  async function handleBuyProjects() {
+    if (!projectEmail.trim() || projectCount < 1) return
+    setProjectLoading(true)
+    setProjectError('')
+    await trackInquiry('checkout_start', { email: projectEmail, packageId: 'projects', projectCount: String(projectCount) })
+    try {
+      const res = await fetch('/api/gpt-vault/checkout', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ packageId: 'projects', projectCount, email: projectEmail.trim() }),
+      })
+      const data = await res.json()
+      if (!res.ok || !data.url) {
+        setProjectError(data.error ?? t.projError)
+        setProjectLoading(false)
+        return
+      }
+      window.location.href = data.url
+    } catch {
+      setProjectError(t.projNoConn)
+      setProjectLoading(false)
+    }
+  }
+
   const mainPackages      = packages.filter((p) => !p.contactOnly)
   const enterprisePackage = packages.find((p) => p.contactOnly)
 
@@ -332,8 +384,9 @@ export default function GptVaultPage() {
 
       {/* ── Seiten-Wasserzeichen ─────────────────────────────────────── */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src="/logo.svg"
+        src="/logo-dirk.jpg"
         alt=""
         aria-hidden="true"
         className={styles.pageBgLogo}
@@ -526,6 +579,62 @@ export default function GptVaultPage() {
         )}
       </section>
 
+      {/* ── ChatGPT Projekte ─────────────────────────────────────────── */}
+      <section className={styles.packages}>
+        <h2 className={styles.sectionTitle}>{t.projTitle}</h2>
+        <p className={styles.sectionSub}>{t.projSub}</p>
+
+        <div className={styles.projectBox}>
+          <label className={styles.projectLabel}>
+            {t.projLabel}
+            <span className={styles.projectPer}>{t.projPer}</span>
+          </label>
+          <div className={styles.projectRow}>
+            <button
+              className={styles.projectStep}
+              onClick={() => setProjectCount((n) => Math.max(1, n - 1))}
+              aria-label="Weniger"
+            >−</button>
+            <input
+              type="number"
+              min={1}
+              max={500}
+              value={projectCount}
+              onChange={(e) => setProjectCount(Math.max(1, Math.min(500, parseInt(e.target.value) || 1)))}
+              className={styles.projectInput}
+            />
+            <button
+              className={styles.projectStep}
+              onClick={() => setProjectCount((n) => Math.min(500, n + 1))}
+              aria-label="Mehr"
+            >+</button>
+          </div>
+          <div className={styles.projectTotal}>
+            {t.projTotal}&nbsp;
+            <strong>{((projectCount * 120) / 100).toFixed(2).replace('.', ',')} €</strong>
+          </div>
+
+          <input
+            type="email"
+            placeholder={t.projEmail}
+            value={projectEmail}
+            onChange={(e) => setProjectEmail(e.target.value)}
+            className={styles.emailInput}
+            style={{ marginTop: '16px' }}
+            onKeyDown={(e) => e.key === 'Enter' && handleBuyProjects()}
+          />
+          {projectError && <p className={styles.error}>{projectError}</p>}
+          <button
+            className={styles.buyButton}
+            onClick={handleBuyProjects}
+            disabled={projectLoading || !projectEmail.trim() || projectCount < 1}
+          >
+            {projectLoading ? t.projLoading : t.projCta}
+          </button>
+          <p className={styles.checkoutHint}>{t.projHint}</p>
+        </div>
+      </section>
+
       {/* ── Checkout ────────────────────────────────────────────────── */}
       {selectedPkg && (
         <section className={styles.checkout}>
@@ -587,7 +696,7 @@ export default function GptVaultPage() {
             <strong>{t.support1Title}</strong>
             <p>{t.support1Desc}</p>
             <a
-              href="https://terminbuchung-ten.vercel.app/"
+              href="https://dkoetting.github.io/terminbuchung/"
               target="_blank"
               rel="noopener noreferrer"
               className={styles.supportLink}

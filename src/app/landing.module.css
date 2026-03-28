@@ -34,6 +34,37 @@
   border-radius: 6px;
 }
 
+/* ── Lang Toggle ─────────────────────────────────────────────────────────── */
+.langToggle {
+  display: flex;
+  gap: 3px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 8px;
+  padding: 4px;
+}
+
+.langBtn {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: rgba(255,255,255,0.55);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px 11px;
+  border-radius: 5px;
+  letter-spacing: 0.06em;
+  transition: all 0.15s;
+}
+
+.langBtn:hover {
+  color: rgba(255,255,255,0.85);
+}
+
+.langBtnActive {
+  color: #1e3a8a !important;
+  background: #fff;
+}
+
 .headerLogoRight {
   height: 44px;
   width: auto;

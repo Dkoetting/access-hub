@@ -24,8 +24,8 @@
   width: 65vw;
   max-width: 640px;
   height: auto;
-  opacity: 0.08;
-  filter: invert(1) grayscale(1);
+  opacity: 0.07;
+  filter: grayscale(1);
   mix-blend-mode: multiply;
   pointer-events: none;
   z-index: 0;
@@ -369,7 +369,7 @@
   left: 6px;
   width: 22px;
   height: 22px;
-  background: #1d4ed8;
+  background: #2563eb;
   color: #fff;
   border-radius: 50%;
   font-size: 0.72rem;
@@ -502,7 +502,7 @@
 .aboutContact a {
   font-size: 0.92rem;
   font-weight: 700;
-  color: #1d4ed8;
+  color: #2563eb;
   text-decoration: none;
 }
 
@@ -516,7 +516,7 @@
   cursor: pointer;
   font-size: 0.92rem;
   font-weight: 700;
-  color: #1d4ed8;
+  color: #2563eb;
   padding: 0;
   text-align: right;
 }
@@ -633,7 +633,7 @@
 }
 
 .cardSelected {
-  border-color: #1d4ed8 !important;
+  border-color: #2563eb !important;
   background: #eff6ff;
   box-shadow: 0 6px 24px rgba(29, 78, 216, 0.18) !important;
 }
@@ -643,7 +643,7 @@
   top: -11px;
   left: 50%;
   transform: translateX(-50%);
-  background: #1d4ed8;
+  background: #2563eb;
   color: #fff;
   font-size: 0.72rem;
   font-weight: 700;
@@ -669,7 +669,7 @@
 .cardPrice {
   font-size: 1.35rem;
   font-weight: 800;
-  color: #1d4ed8;
+  color: #2563eb;
   margin-bottom: 12px;
 }
 
@@ -677,7 +677,7 @@
   display: inline-block;
   font-size: 0.8rem;
   font-weight: 700;
-  color: #1d4ed8;
+  color: #2563eb;
   padding: 4px 12px;
   border: 1.5px solid #93c5fd;
   border-radius: 20px;
@@ -685,9 +685,9 @@
 }
 
 .cardSelected .cardSelect {
-  background: #1d4ed8;
+  background: #2563eb;
   color: #fff;
-  border-color: #1d4ed8;
+  border-color: #2563eb;
 }
 
 /* ── Enterprise ───────────────────────────────────────────────────────────── */
@@ -728,7 +728,7 @@
 .enterpriseLink {
   font-size: 0.88rem;
   font-weight: 700;
-  color: #1d4ed8;
+  color: #2563eb;
   text-decoration: none;
   white-space: nowrap;
   background: none;
@@ -787,7 +787,7 @@
   width: 100%;
   margin-top: 14px;
   padding: 13px;
-  background: linear-gradient(135deg, #1e40af, #2563eb);
+  background: linear-gradient(135deg, #1e3a8a, #2563eb);
   color: #fff;
   border: none;
   border-radius: 10px;
@@ -864,7 +864,7 @@
   display: inline-block;
   margin-top: 6px;
   font-weight: 700;
-  color: #1d4ed8;
+  color: #2563eb;
   font-size: 1rem;
 }
 
@@ -872,7 +872,7 @@
   display: inline-block;
   font-size: 0.85rem;
   font-weight: 700;
-  color: #1d4ed8;
+  color: #2563eb;
   text-decoration: none;
   background: none;
   border: none;
@@ -1014,4 +1014,92 @@
   padding: 0.3rem 0.6rem;
   border-radius: 6px;
   cursor: pointer;
+}
+
+/* ── ChatGPT Projekte ──────────────────────────────────────────────────────── */
+
+.projectBox {
+  background: #f0f4ff;
+  border: 2px solid #2563eb;
+  border-radius: 18px;
+  padding: 32px;
+  max-width: 480px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.projectLabel {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+  color: #1e3a8a;
+  font-size: 0.95rem;
+}
+
+.projectPer {
+  font-weight: 400;
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+.projectRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-content: center;
+}
+
+.projectStep {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid #2563eb;
+  background: #fff;
+  color: #2563eb;
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+}
+
+.projectStep:hover {
+  background: #2563eb;
+  color: #fff;
+}
+
+.projectInput {
+  width: 90px;
+  text-align: center;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #1e3a8a;
+  border: 2px solid #2563eb;
+  border-radius: 10px;
+  padding: 6px 8px;
+  outline: none;
+  background: #fff;
+}
+
+.projectInput::-webkit-inner-spin-button,
+.projectInput::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+}
+
+.projectTotal {
+  text-align: center;
+  font-size: 1.5rem;
+  color: #1e3a8a;
+  margin: 4px 0;
+}
+
+.projectTotal strong {
+  font-size: 2rem;
+  font-weight: 900;
 }

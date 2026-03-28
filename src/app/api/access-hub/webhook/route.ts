@@ -1,13 +1,15 @@
 import { NextResponse } from 'next/server'
 import Stripe from 'stripe'
 import { Resend } from 'resend'
-
 import { getSupabaseAdmin } from '@/lib/supabase-admin'
-import { fillTemplate, getHubContent } from '@/lib/hub-content'
 import { generatePlainToken, hashToken } from '@/lib/tokens'
 import { findAppById } from '@/lib/apps'
+import { generateInvoiceBuffer } from '@/lib/invoice-pdf'
+import { appendCrmRow, ensureCrmHeaders } from '@/lib/google-sheets'
 
 const TTL_HOURS = Number(process.env.ACCESS_LINK_TTL_HOURS ?? 8)
+
+// ── POST /api/access-hub/webhook ───────────────────────────────────────────────
 
 export async function POST(request: Request) {
   const stripeKey     = process.env.STRIPE_SECRET_KEY
@@ -18,7 +20,6 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'server_config' }, { status: 500 })
   }
 
-  // 1. Stripe Signatur prüfen
   const stripe    = new Stripe(stripeKey)
   const body      = await request.text()
   const signature = request.headers.get('stripe-signature') ?? ''
@@ -37,19 +38,18 @@ export async function POST(request: Request) {
 
   const session = event.data.object as Stripe.Checkout.Session
 
-  // 2. Metadaten lesen
-  const appId    = session.metadata?.app_id ?? ''
-  const email    = (session.customer_details?.email ?? session.customer_email ?? '').toLowerCase().trim()
-  const fullName = session.metadata?.customer_name || session.customer_details?.name || ''
-
-  if (!email || !appId) {
-    console.error('[access-hub/webhook] Fehlende Metadaten', { email, appId })
-    return NextResponse.json({ error: 'missing_metadata' }, { status: 400 })
-  }
-
-  // Session purchases are handled entirely by gpt-vault's own webhook
+  // Skip GPT Vault sessions (handled by gpt-vault webhook)
   if (session.metadata?.package_id === 'session') {
     return NextResponse.json({ received: true })
+  }
+
+  const appId     = session.metadata?.app_id     ?? ''
+  const invoiceId = session.metadata?.invoice_id ?? ''
+  const email     = (session.customer_details?.email ?? session.customer_email ?? '').toLowerCase().trim()
+
+  if (!appId || !email) {
+    console.error('[access-hub/webhook] Fehlende Metadaten', { appId, email })
+    return NextResponse.json({ error: 'missing_metadata' }, { status: 400 })
   }
 
   const app = findAppById(appId)
@@ -59,16 +59,47 @@ export async function POST(request: Request) {
   }
 
   const supabase = getSupabaseAdmin()
-  const nowIso   = new Date().toISOString()
   const nowMs    = Date.now()
+  const nowIso   = new Date(nowMs).toISOString()
 
-  // 3. Registrierung anlegen (Duplicate tolerieren)
-  let registrationId: string | null = null
+  // 1. Invoice aus DB laden (Billing-Daten)
+  let invoiceRow: {
+    id: string; invoice_nr: string; billing_type: string
+    company: string|null; vat_id: string|null
+    first_name: string|null; last_name: string|null
+    street: string; zip: string; city: string; country: string
+    phone: string|null
+    amount_net_cents: number; amount_vat_cents: number; amount_gross_cents: number
+  } | null = null
+
+  if (invoiceId) {
+    const { data } = await supabase
+      .from('hub_invoices')
+      .select('id,invoice_nr,billing_type,company,vat_id,first_name,last_name,street,zip,city,country,phone,amount_net_cents,amount_vat_cents,amount_gross_cents')
+      .eq('id', invoiceId)
+      .single()
+    invoiceRow = data
+  }
+
+  // Invoice auf paid setzen
+  if (invoiceRow) {
+    await supabase
+      .from('hub_invoices')
+      .update({ status: 'paid', stripe_session_id: session.id })
+      .eq('id', invoiceRow.id)
+  }
+
+  // 2. Registrierung anlegen
+  const fullName = invoiceRow
+    ? (invoiceRow.billing_type === 'company'
+        ? (invoiceRow.company ?? '')
+        : `${invoiceRow.first_name ?? ''} ${invoiceRow.last_name ?? ''}`.trim())
+    : (session.customer_details?.name ?? '')
 
   const { data: newReg, error: regError } = await supabase
     .from('hub_registrations')
     .insert({
-      email:            email,
+      email,
       email_normalized: email,
       full_name:        fullName || null,
       app_id:           app.id,
@@ -80,8 +111,9 @@ export async function POST(request: Request) {
     .select('id')
     .single()
 
+  let registrationId: string | null = null
+
   if (regError?.code === '23505') {
-    // Duplicate → bestehende laden
     const { data: existing } = await supabase
       .from('hub_registrations')
       .select('id')
@@ -99,37 +131,26 @@ export async function POST(request: Request) {
   }
 
   if (!registrationId) {
-    console.error('[access-hub/webhook] Keine Registration-ID')
     return NextResponse.json({ error: 'db_error' }, { status: 500 })
   }
 
-  // 4. Zugangslink erstellen
+  // 3. Zugangslink erstellen
   const plainToken = generatePlainToken()
   const tokenHash  = hashToken(plainToken)
   const expiresAt  = new Date(nowMs + TTL_HOURS * 60 * 60 * 1000)
 
-  const { error: linkError } = await supabase.from('hub_access_links').insert({
+  await supabase.from('hub_access_links').insert({
     registration_id: registrationId,
     token_hash:      tokenHash,
     expires_at:      expiresAt.toISOString(),
   })
 
-  if (linkError) {
-    console.error('[access-hub/webhook] Access-Link fehlgeschlagen', linkError)
-    return NextResponse.json({ error: 'db_error' }, { status: 500 })
-  }
-
-  // 5. Events loggen
+  // 4. Events loggen
   void supabase.from('hub_access_events').insert([
     {
       registration_id: registrationId,
       event_type:      'stripe_payment_completed',
-      metadata: {
-        stripe_session_id: session.id,
-        app_id:            app.id,
-        amount_total:      session.amount_total,
-        created_at:        nowIso,
-      },
+      metadata: { stripe_session_id: session.id, app_id: app.id, amount_total: session.amount_total, created_at: nowIso },
     },
     {
       registration_id: registrationId,
@@ -138,35 +159,116 @@ export async function POST(request: Request) {
     },
   ])
 
-  // 6. Zugangslink per E-Mail senden
-  const resendKey = process.env.RESEND_API_KEY
-  const fromEmail = process.env.RESEND_FROM_EMAIL ?? 'onboarding@resend.dev'
   const baseUrl   = process.env.NEXT_PUBLIC_HUB_BASE_URL ?? 'https://access-hub-tan.vercel.app'
   const accessUrl = `${baseUrl}/access?token=${encodeURIComponent(plainToken)}`
 
-  if (resendKey) {
-    const resend  = new Resend(resendKey)
-    const content = getHubContent()
-    const name    = fullName ? ` ${fullName}` : ''
+  // 5. Rechnung PDF generieren
+  let pdfBuffer: Buffer | null = null
+  if (invoiceRow) {
+    const now = new Date()
+    const invoiceDate = now.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' })
 
-    const subject = fillTemplate(content.mail.subject, { appName: app.name })
-    const greeting = fillTemplate(content.mail.greeting, { namePart: name })
-    const intro    = fillTemplate(content.mail.intro,    { appName: app.name })
-    const ttlText  = fillTemplate(content.mail.ttl,      { hours: TTL_HOURS })
+    try {
+      pdfBuffer = await generateInvoiceBuffer({
+        invoiceNr:        invoiceRow.invoice_nr,
+        invoiceDate,
+        appName:          app.name,
+        appDesc:          app.description ?? '',
+        amountNetCents:   invoiceRow.amount_net_cents,
+        amountVatCents:   invoiceRow.amount_vat_cents,
+        amountGrossCents: invoiceRow.amount_gross_cents,
+        billingType:      (invoiceRow.billing_type as 'company' | 'private'),
+        company:          invoiceRow.company    ?? undefined,
+        vatId:            invoiceRow.vat_id     ?? undefined,
+        firstName:        invoiceRow.first_name ?? undefined,
+        lastName:         invoiceRow.last_name  ?? undefined,
+        street:           invoiceRow.street,
+        zip:              invoiceRow.zip,
+        city:             invoiceRow.city,
+        country:          invoiceRow.country,
+        email,
+      })
+    } catch (pdfErr) {
+      console.error('[access-hub/webhook] PDF-Fehler', pdfErr)
+    }
+  }
+
+  // 6. Google Sheets CRM
+  if (invoiceRow) {
+    try {
+      await ensureCrmHeaders()
+      const now        = new Date()
+      const kundNr     = `KD-${now.getFullYear()}-${invoiceRow.invoice_nr.slice(-5)}`
+      const fmt        = (c: number) => (c / 100).toFixed(2).replace('.', ',')
+      const stripePayId = session.payment_intent
+        ? (typeof session.payment_intent === 'string' ? session.payment_intent : session.payment_intent.id)
+        : ''
+
+      await appendCrmRow({
+        kundennummer:    kundNr,
+        rechnungsnummer: invoiceRow.invoice_nr,
+        billingTyp:      invoiceRow.billing_type === 'company' ? 'Firma' : 'Privat',
+        firma:           invoiceRow.company    ?? '',
+        vorname:         invoiceRow.first_name ?? '',
+        nachname:        invoiceRow.last_name  ?? '',
+        ustId:           invoiceRow.vat_id     ?? '',
+        strasse:         invoiceRow.street,
+        plz:             invoiceRow.zip,
+        ort:             invoiceRow.city,
+        land:            invoiceRow.country,
+        email,
+        telefon:         invoiceRow.phone ?? '',
+        produkt:         app.name,
+        preisNetto:      fmt(invoiceRow.amount_net_cents),
+        mwst:            fmt(invoiceRow.amount_vat_cents),
+        preisGross:      fmt(invoiceRow.amount_gross_cents),
+        zahlungsstatus:  'paid',
+        stripePaymentId: stripePayId,
+        supabaseId:      invoiceRow.id,
+        erstelltAm:      now.toLocaleString('de-DE'),
+      })
+    } catch (sheetErr) {
+      console.error('[access-hub/webhook] Google Sheets Fehler', sheetErr)
+    }
+  }
+
+  // 7. E-Mail senden
+  const resendKey = process.env.RESEND_API_KEY
+  const fromEmail = process.env.RESEND_FROM_EMAIL ?? 'onboarding@resend.dev'
+
+  if (resendKey) {
+    const resend    = new Resend(resendKey)
+    const name      = fullName ? ` ${fullName}` : ''
+    const invoiceNr = invoiceRow?.invoice_nr ?? ''
+
+    const attachments: { filename: string; content: Buffer }[] = []
+    if (pdfBuffer) {
+      attachments.push({ filename: `Rechnung_${invoiceNr}.pdf`, content: pdfBuffer })
+    }
 
     await resend.emails.send({
       from:    fromEmail,
       to:      email,
-      subject,
+      subject: `Ihr Zugang: ${app.name}`,
+      attachments,
       html: `
-        <p>${greeting}</p>
-        <p>${intro}</p>
+        <p>Hallo${name},</p>
+        <p>vielen Dank für Ihren Kauf von <strong>${app.name}</strong>.</p>
         <p>
-          <a href="${accessUrl}" style="font-weight:bold;">${content.mail.openLink}</a>
+          Ihr persönlicher Zugangslink:<br />
+          <a href="${accessUrl}" style="font-weight:bold;">${accessUrl}</a>
         </p>
-        <p>${ttlText}</p>
+        <p style="color:#6b7280;font-size:13px;">
+          ${app.maxUses === 1
+            ? 'Dieser Link kann <strong>einmalig</strong> verwendet werden.'
+            : `Dieser Link ist ${TTL_HOURS} Stunden gültig.`
+          }
+        </p>
+        ${pdfBuffer ? '<p>Die Rechnung finden Sie im Anhang dieser E-Mail.</p>' : ''}
         <hr />
-        <p style="font-size:12px;color:#6b7280;">${content.mail.footer}</p>
+        <p style="font-size:12px;color:#9ca3af;">
+          K &amp; N EDV-Konzepte GmbH | Dr. DirKInstitute · Flurweg 14 · 83646 Bad Tölz · dkoetting@edvkonzepte.de
+        </p>
       `,
     }).catch((err) => {
       console.error('[access-hub/webhook] E-Mail fehlgeschlagen', err)

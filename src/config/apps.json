@@ -1,7 +1,7 @@
 [
   {
     "id": "k-kausale-kompetenz-test",
-    "name": "Kausale Kompetenz Test",
+    "name": "K² – Kausale Kompetenz",
     "description": "K² Kausale Kompetenz Test - die Fähigkeit, autonome KI-Entscheidungen E2E zu durchdringen.",
     "oneTimePriceCents": 2900,
     "maxUses": 1,
@@ -30,10 +30,10 @@
     "name": "GPT Vault",
     "description": "Sichere alle deine Custom GPTs als JSON & Excel – lokal, einmalig, sofort nutzbar. Eigene Pakete ab 4,90 €.",
     "oneTimePriceCents": 490,
-    "redirectUrl": "https://gpt-vault-theta.vercel.app",
+    "redirectUrl": "https://gpt-vault-theta.vercel.app/",
     "cliTool": true,
     "accessUrlEnv": "APP_URL_GPT_VAULT",
-    "defaultAccessUrl": "https://gpt-vault-theta.vercel.app"
+    "defaultAccessUrl": "https://gpt-vault-theta.vercel.app/"
   },
   {
     "id": "eu-ai-act-navigator",

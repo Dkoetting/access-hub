@@ -5,6 +5,7 @@ import { randomUUID } from 'crypto'
 
 import { getSupabaseAdmin } from '@/lib/supabase-admin'
 import { getGptVaultDownloadUrl } from '@/lib/gpt-vault-download'
+import { getGptVaultProjectDownloadUrl } from '@/lib/gpt-vault-project-download'
 import { generatePlainToken, hashToken } from '@/lib/tokens'
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -48,13 +49,17 @@ export async function POST(request: Request) {
   const session = event.data.object as Stripe.Checkout.Session
 
   // 3. Metadaten lesen
-  const packageId = session.metadata?.package_id ?? ''
-  const maxGpts   = parseInt(session.metadata?.max_gpts ?? '0', 10)
-  const email     = (session.customer_details?.email ?? session.customer_email ?? '').toLowerCase().trim()
-  const fullName  = session.customer_details?.name ?? ''
+  const appId       = session.metadata?.app_id ?? 'gpt-vault'
+  const packageId   = session.metadata?.package_id ?? ''
+  const maxGpts     = parseInt(session.metadata?.max_gpts ?? '0', 10)
+  const maxProjects = parseInt(session.metadata?.max_projects ?? '0', 10)
+  const email       = (session.customer_details?.email ?? session.customer_email ?? '').toLowerCase().trim()
+  const fullName    = session.customer_details?.name ?? ''
+  const isProjectFlow = appId === 'gpt-vault-project'
+  const appName = isProjectFlow ? 'GPT Vault Projects' : 'GPT Vault'
 
   if (!email || !packageId) {
-    console.error('[gpt-vault/webhook] Fehlende Metadaten', { email, packageId })
+    console.error('[gpt-vault/webhook] Fehlende Metadaten', { email, packageId, appId })
     return NextResponse.json({ error: 'missing_metadata' }, { status: 400 })
   }
 
@@ -70,8 +75,8 @@ export async function POST(request: Request) {
       email:            email,
       email_normalized: email,
       full_name:        fullName || null,
-      app_id:           'gpt-vault',
-      app_name:         'GPT Vault',
+      app_id:           appId,
+      app_name:         appName,
       app_price_cents:  session.amount_total ?? 0,
       app_currency:     'EUR',
       status:           'active',
@@ -85,7 +90,7 @@ export async function POST(request: Request) {
       .from('hub_registrations')
       .select('id')
       .eq('email_normalized', email)
-      .eq('app_id', 'gpt-vault')
+      .eq('app_id', appId)
       .single()
     registration = existing
   } else if (regError || !newReg) {
@@ -100,7 +105,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'db_error' }, { status: 500 })
   }
 
-  // 5. Lizenz anlegen (mit max_gpts aus dem Paket)
+  // 5. Lizenz anlegen
   const licenseKey = generateLicenseKey()
 
   const { error: licenseError } = await supabase
@@ -109,6 +114,7 @@ export async function POST(request: Request) {
       registration_id: registration.id,
       license_key:     licenseKey,
       max_gpts:        maxGpts,
+      max_projects:    maxProjects,
       status:          'active',
     })
 
@@ -142,8 +148,10 @@ export async function POST(request: Request) {
       event_type:      'stripe_payment_completed',
       metadata: {
         stripe_session_id: session.id,
+        app_id:            appId,
         package_id:        packageId,
         max_gpts:          maxGpts,
+        max_projects:      maxProjects,
         amount_total:      session.amount_total,
         created_at:        nowIso,
       },
@@ -151,7 +159,7 @@ export async function POST(request: Request) {
     {
       registration_id: registration.id,
       event_type:      'license_created',
-      metadata: { license_key: licenseKey, max_gpts: maxGpts },
+      metadata: { license_key: licenseKey, max_gpts: maxGpts, max_projects: maxProjects },
     },
   ])
 
@@ -159,8 +167,17 @@ export async function POST(request: Request) {
   const resendKey   = process.env.RESEND_API_KEY
   const fromEmail   = process.env.RESEND_FROM_EMAIL ?? 'onboarding@resend.dev'
   const baseUrl     = process.env.NEXT_PUBLIC_HUB_BASE_URL ?? 'https://access-hub-tan.vercel.app'
-  const downloadUrl = getGptVaultDownloadUrl()
+  const downloadUrl = isProjectFlow ? getGptVaultProjectDownloadUrl() : getGptVaultDownloadUrl()
   const activationUrl = `${baseUrl}/access?token=${encodeURIComponent(plainToken)}`
+  const subject = isProjectFlow
+    ? 'GPT Vault Projects – your download & activation token'
+    : 'GPT Vault – your download & activation token'
+  const productLabel = isProjectFlow ? 'GPT Vault Projects' : 'GPT Vault'
+  const downloadLabel = isProjectFlow ? 'Download GPT Vault Projects (ZIP)' : 'Download GPT Vault (ZIP)'
+  const stepLabel = isProjectFlow ? 'Download GPT Vault Projects' : 'Download GPT Vault'
+  const summaryLine = isProjectFlow
+    ? `Your purchase: ${productLabel} – ${maxProjects} Project${maxProjects === 1 ? '' : 's'}`
+    : `Your package: ${productLabel} – ${packageId} (max. ${maxGpts} GPTs)`
 
   if (resendKey) {
     const resend = new Resend(resendKey)
@@ -169,13 +186,13 @@ export async function POST(request: Request) {
     await resend.emails.send({
       from:    fromEmail,
       to:      email,
-      subject: 'GPT Vault – your download & activation token',
+      subject,
       html: `
         <p>Hello${name},</p>
-        <p>thank you for purchasing <strong>GPT Vault</strong>!</p>
-        <p><strong>Step 1 – Download GPT Vault:</strong></p>
+        <p>thank you for purchasing <strong>${productLabel}</strong>!</p>
+        <p><strong>Step 1 – ${stepLabel}:</strong></p>
         <p>
-          <a href="${downloadUrl}" style="font-weight:bold;">→ Download GPT Vault (ZIP)</a>
+          <a href="${downloadUrl}" style="font-weight:bold;">→ ${downloadLabel}</a>
         </p>
         <p><strong>Step 2 – Activate:</strong></p>
         <p>Start GPT Vault and enter the following token when prompted,<br/>
@@ -187,7 +204,7 @@ export async function POST(request: Request) {
           <a href="${activationUrl}" style="font-weight:bold;">→ Activate directly</a>
         </p>
         <p style="color:#6b7280;font-size:12px;">
-          Your package: GPT Vault – ${packageId} (max. ${maxGpts} GPTs)<br/>
+          ${summaryLine}<br/>
           Token valid for ${TTL_HOURS} hours.<br/>
           Questions? dr-dirk@dr-dirkinstitute.org
         </p>

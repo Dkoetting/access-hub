@@ -39,3 +39,18 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+.vercel
+
+# sensitive files / credentials / personal
+OLD/
+*.bak
+access-hub.env.*
+Dirk_*.jpg
+IMG_*.jpeg
+docs/superpowers/
+Reality_check/
+Supabase_credential.txt
+devserver*.log
+"public/Logo .bmp"
+"public/Logo_01 .png"

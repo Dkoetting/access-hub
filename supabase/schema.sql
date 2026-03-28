@@ -51,7 +51,8 @@ create index if not exists hub_access_events_registration_idx
 -- ─────────────────────────────────────────────────────────────────────────────
 --  license_key  : wird in .env des Kunden gespeichert; bei jedem Start online
 --                 geprüft → Revocation möglich; kein reines LICENSE_ACTIVATED=1
---  max_gpts     : 0 = unbegrenzt; >0 = Limit (z.B. 10 für Pilot-Upgrade)
+--  max_gpts     : 0 = unbegrenzt; >0 = Limit fuer Custom GPTs
+--  max_projects : 0 = unbegrenzt; >0 = Limit fuer Projects
 --  status       : active | suspended | expired
 -- ─────────────────────────────────────────────────────────────────────────────
 create table if not exists hub_licenses (
@@ -59,10 +60,13 @@ create table if not exists hub_licenses (
   registration_id uuid        not null references hub_registrations(id) on delete cascade,
   license_key     text        not null unique,
   max_gpts        integer     not null default 0,
+  max_projects    integer     not null default 0,
   status          text        not null default 'active',
   created_at      timestamptz not null default now(),
   updated_at      timestamptz not null default now()
 );
+
+alter table hub_licenses add column if not exists max_projects integer not null default 0;
 
 create index if not exists hub_licenses_registration_idx
   on hub_licenses (registration_id);

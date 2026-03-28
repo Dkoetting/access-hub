@@ -1,3 +1,5 @@
+'use client'
+import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { getAvailableApps } from '@/lib/apps'
@@ -16,25 +18,56 @@ function fmt(cents: number) {
   return (cents / 100).toFixed(2).replace('.', ',') + ' €'
 }
 
-const PROBLEMS = [
-  'KI-Entscheidungen ohne Risikoprüfung',
-  'Regulatorische Pflichten unklar',
-  'Investitionen ohne belastbare Grundlage',
-]
-
-const SYSTEM = [
-  '300-Sekunden-Regel: Entscheidungen in 5 Min.',
-  'AI Safe Policies – maßgeschneidert & sofort einsetzbar',
-  'EU AI Act Navigator – Risikoklasse & Compliance-Check',
-]
-
-const OUTCOMES = [
-  'Klare, belastbare KI-Entscheidungen',
-  'Regulatorische Risiken sichtbar & kontrollierbar',
-  'Schnelleres Handeln mit sicherem Fundament',
-]
+const T = {
+  de: {
+    eyebrow:      'KI Governance · Entscheidungssicherheit',
+    title:        'KI ist aktuell das größte unkontrollierte Risiko in Ihrem Unternehmen.',
+    sub:          'Wir machen KI-Entscheidungen in 5 Minuten belastbar – rechtlich und operativ.',
+    cta:          'KI-Governance-Status prüfen →',
+    trustLine:    'Keine Registrierung · Sofortiger Start · Ergebnis in 5 Minuten',
+    problemsTitle:'Das Problem',
+    problems:     ['KI-Entscheidungen ohne Risikoprüfung','Regulatorische Pflichten unklar','Investitionen ohne belastbare Grundlage'],
+    systemTitle:  'Das System',
+    system:       ['300-Sekunden-Regel: Entscheidungen in 5 Min.','AI Safe Policies – maßgeschneidert & sofort einsetzbar','EU AI Act Navigator – Risikoklasse & Compliance-Check'],
+    outcomesTitle:'Das Ergebnis',
+    outcomes:     ['Klare, belastbare KI-Entscheidungen','Regulatorische Risiken sichtbar & kontrollierbar','Schnelleres Handeln mit sicherem Fundament'],
+    trustRole:    'Dr. DirKInstitute · KI-Beratung & Governance',
+    trustDesc:    'Ich begleite Führungskräfte dabei, KI-Entscheidungen rechtssicher und operativ belastbar zu machen – ohne Technologiefokus, mit strategischem Blick.',
+    toolsTitle:   'Die Werkzeuge dahinter',
+    toolsSub:     'Jedes Tool ist Teil des Frameworks – einzeln nutzbar, gemeinsam wirkungsvoll.',
+    badge:        'Einmalige Nutzung',
+    badgeExternal:'Eigene Plattform',
+    buyBtn:       'Jetzt kaufen →',
+    toApp:        'Zur App →',
+    footerSub:    '🔒 Sichere Zahlung via Stripe · Rechnung per E-Mail',
+  },
+  en: {
+    eyebrow:      'AI Governance · Decision Confidence',
+    title:        'AI is currently the largest uncontrolled risk in your organization.',
+    sub:          'We make AI decisions audit-proof in 5 minutes – legally and operationally.',
+    cta:          'Check AI Governance Status →',
+    trustLine:    'No registration · Instant start · Results in 5 minutes',
+    problemsTitle:'The Problem',
+    problems:     ['AI decisions without risk assessment','Regulatory obligations unclear','Investments without solid foundation'],
+    systemTitle:  'The System',
+    system:       ['300-Second Rule: Decisions in 5 min.','AI Safe Policies – tailored & ready to deploy','EU AI Act Navigator – Risk class & compliance check'],
+    outcomesTitle:'The Result',
+    outcomes:     ['Clear, defensible AI decisions','Regulatory risks visible & controlled','Faster action on a secure foundation'],
+    trustRole:    'Dr. DirKInstitute · AI Consulting & Governance',
+    trustDesc:    'I help executives make AI decisions legally sound and operationally defensible – strategic perspective, no technology focus.',
+    toolsTitle:   'The Tools Behind It',
+    toolsSub:     'Each tool is part of the framework – usable individually, powerful together.',
+    badge:        'Single use',
+    badgeExternal:'Own Platform',
+    buyBtn:       'Buy now →',
+    toApp:        'To App →',
+    footerSub:    '🔒 Secure payment via Stripe · Invoice by email',
+  },
+}
 
 export default function Home() {
+  const [lang, setLang] = useState<'de' | 'en'>('de')
+  const t = T[lang]
   const apps = getAvailableApps()
 
   return (
@@ -52,6 +85,19 @@ export default function Home() {
             priority
           />
         </div>
+
+        {/* DE/EN Toggle */}
+        <div className={styles.langToggle}>
+          <button
+            className={`${styles.langBtn} ${lang === 'de' ? styles.langBtnActive : ''}`}
+            onClick={() => setLang('de')}
+          >DE</button>
+          <button
+            className={`${styles.langBtn} ${lang === 'en' ? styles.langBtnActive : ''}`}
+            onClick={() => setLang('en')}
+          >EN</button>
+        </div>
+
         <div className={styles.headerLogoWrap}>
           <Image
             src="/logo-dirk.jpg"
@@ -66,51 +112,34 @@ export default function Home() {
 
       {/* ── Hero ── */}
       <section className={styles.hero}>
-        <p className={styles.heroEyebrow}>KI Governance · Entscheidungssicherheit</p>
-        <h1 className={styles.heroTitle}>
-          KI ist aktuell das größte unkontrollierte Risiko in Ihrem Unternehmen.
-        </h1>
-        <p className={styles.heroSub}>
-          Wir machen KI-Entscheidungen in 5 Minuten belastbar – rechtlich und operativ.
-        </p>
-        <a
-          href="/realitaetscheck/"
-          className={styles.heroCta}
-        >
-          KI-Governance-Status prüfen →
-        </a>
-        <p className={styles.heroTrust}>
-          Keine Registrierung · Sofortiger Start · Ergebnis in 5 Minuten
-        </p>
+        <p className={styles.heroEyebrow}>{t.eyebrow}</p>
+        <h1 className={styles.heroTitle}>{t.title}</h1>
+        <p className={styles.heroSub}>{t.sub}</p>
+        <a href="/realitaetscheck/" className={styles.heroCta}>{t.cta}</a>
+        <p className={styles.heroTrust}>{t.trustLine}</p>
       </section>
 
       {/* ── 3 Blocks ── */}
       <section className={styles.blocks}>
         <div className={styles.block}>
           <div className={styles.blockIcon}>⚠️</div>
-          <h2 className={styles.blockTitle}>Das Problem</h2>
+          <h2 className={styles.blockTitle}>{t.problemsTitle}</h2>
           <ul className={styles.blockList}>
-            {PROBLEMS.map((p) => (
-              <li key={p}>{p}</li>
-            ))}
+            {t.problems.map((p) => <li key={p}>{p}</li>)}
           </ul>
         </div>
         <div className={`${styles.block} ${styles.blockCenter}`}>
           <div className={styles.blockIcon}>🧭</div>
-          <h2 className={styles.blockTitle}>Das System</h2>
+          <h2 className={styles.blockTitle}>{t.systemTitle}</h2>
           <ul className={styles.blockList}>
-            {SYSTEM.map((s) => (
-              <li key={s}>{s}</li>
-            ))}
+            {t.system.map((s) => <li key={s}>{s}</li>)}
           </ul>
         </div>
         <div className={styles.block}>
           <div className={styles.blockIcon}>✅</div>
-          <h2 className={styles.blockTitle}>Das Ergebnis</h2>
+          <h2 className={styles.blockTitle}>{t.outcomesTitle}</h2>
           <ul className={styles.blockList}>
-            {OUTCOMES.map((o) => (
-              <li key={o}>{o}</li>
-            ))}
+            {t.outcomes.map((o) => <li key={o}>{o}</li>)}
           </ul>
         </div>
       </section>
@@ -127,21 +156,16 @@ export default function Home() {
           />
           <div className={styles.trustText}>
             <strong className={styles.trustName}>Dr. Dirk Kötting</strong>
-            <span className={styles.trustRole}>Dr. DirKInstitute · KI-Beratung & Governance</span>
-            <p className={styles.trustDesc}>
-              Ich begleite Führungskräfte dabei, KI-Entscheidungen rechtssicher und operativ
-              belastbar zu machen – ohne Technologiefokus, mit strategischem Blick.
-            </p>
+            <span className={styles.trustRole}>{t.trustRole}</span>
+            <p className={styles.trustDesc}>{t.trustDesc}</p>
           </div>
         </div>
       </section>
 
       {/* ── Tools (secondary) ── */}
       <main className={styles.main}>
-        <h2 className={styles.sectionTitle}>Die Werkzeuge dahinter</h2>
-        <p className={styles.sectionSub}>
-          Jedes Tool ist Teil des Frameworks – einzeln nutzbar, gemeinsam wirkungsvoll.
-        </p>
+        <h2 className={styles.sectionTitle}>{t.toolsTitle}</h2>
+        <p className={styles.sectionSub}>{t.toolsSub}</p>
         <div className={styles.grid}>
           {apps.map((app) => {
             const netCents   = app.oneTimePriceCents
@@ -157,10 +181,10 @@ export default function Home() {
                   <p className={styles.cardDesc}>{app.description}</p>
                   <div className={styles.badgeRow}>
                     {app.maxUses === 1 && (
-                      <span className={styles.badge}>Einmalige Nutzung</span>
+                      <span className={styles.badge}>{t.badge}</span>
                     )}
                     {isRedirect && (
-                      <span className={styles.badgeExternal}>Eigene Plattform</span>
+                      <span className={styles.badgeExternal}>{t.badgeExternal}</span>
                     )}
                   </div>
                 </div>
@@ -173,11 +197,11 @@ export default function Home() {
                   )}
                   {isRedirect ? (
                     <a href={app.redirectUrl!} className={styles.buyBtnSecondary} target="_blank" rel="noopener noreferrer">
-                      Zur App →
+                      {t.toApp}
                     </a>
                   ) : (
                     <Link href={`/checkout?app=${app.id}`} className={styles.buyBtn}>
-                      Jetzt kaufen →
+                      {t.buyBtn}
                     </Link>
                   )}
                 </div>
@@ -190,7 +214,7 @@ export default function Home() {
       {/* ── Footer ── */}
       <footer className={styles.footer}>
         <p>K &amp; N EDV-Konzepte GmbH | Dr. DirKInstitute · Flurweg 14 · 83646 Bad Tölz · dkoetting@edvkonzepte.de</p>
-        <p className={styles.footerSub}>🔒 Sichere Zahlung via Stripe · Rechnung per E-Mail</p>
+        <p className={styles.footerSub}>{t.footerSub}</p>
       </footer>
 
     </div>

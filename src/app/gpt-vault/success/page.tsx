@@ -1,8 +1,23 @@
 import styles from './page.module.css'
 import { getGptVaultDownloadUrl } from '@/lib/gpt-vault-download'
+import { getGptVaultProjectDownloadUrl } from '@/lib/gpt-vault-project-download'
 
-export default function GptVaultSuccessPage() {
-  const downloadUrl = getGptVaultDownloadUrl()
+type Props = {
+  searchParams: Promise<Record<string, string | string[] | undefined>>
+}
+
+export default async function GptVaultSuccessPage({ searchParams }: Props) {
+  const params = await searchParams
+  const mode = typeof params.mode === 'string' ? params.mode : ''
+  const isProjectFlow = mode === 'projects'
+
+  const downloadUrl = isProjectFlow
+    ? getGptVaultProjectDownloadUrl()
+    : getGptVaultDownloadUrl()
+
+  const title = isProjectFlow ? 'GPT Vault Projekte herunterladen' : 'GPT Vault herunterladen'
+  const downloadLabel = isProjectFlow ? '→ GPT Vault Projekte herunterladen' : '→ GPT Vault herunterladen'
+  const backHref = '/gpt-vault'
 
   return (
     <main className={styles.page}>
@@ -28,7 +43,7 @@ export default function GptVaultSuccessPage() {
           <div className={styles.step}>
             <span className={styles.stepNum}>2</span>
             <div>
-              <strong>GPT Vault herunterladen</strong>
+              <strong>{title}</strong>
               <p>
                 Lade die aktuelle Version herunter und entpacke das ZIP auf deinem PC.
               </p>
@@ -38,7 +53,7 @@ export default function GptVaultSuccessPage() {
                 rel="noopener noreferrer"
                 className={styles.downloadLink}
               >
-                → GPT Vault herunterladen
+                {downloadLabel}
               </a>
             </div>
           </div>
@@ -60,7 +75,7 @@ export default function GptVaultSuccessPage() {
           <a href="mailto:dirk@koetting.bayern">dirk@koetting.bayern</a>
         </div>
 
-        <a href="/gpt-vault" className={styles.backLink}>← Zurück zur Übersicht</a>
+        <a href={backHref} className={styles.backLink}>← Zurück zur Übersicht</a>
 
       </div>
     </main>

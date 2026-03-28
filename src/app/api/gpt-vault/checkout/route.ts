@@ -21,8 +21,9 @@ const packages = packagesRaw as Package[]
 // ── Schema ────────────────────────────────────────────────────────────────────
 
 const requestSchema = z.object({
-  packageId: z.string().min(1).max(32),
-  email:     z.string().email().max(320).optional(),
+  packageId:    z.string().min(1).max(32),
+  email:        z.string().email().max(320).optional(),
+  projectCount: z.number().int().min(1).max(500).optional(),
 })
 
 // ── POST /api/gpt-vault/checkout ─────────────────────────────────────────────
@@ -36,13 +37,45 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'invalid_request' }, { status: 400 })
   }
 
-  // 2. Paket suchen
-  const pkg = packages.find((p) => p.id === body.packageId)
-  if (!pkg) {
-    return NextResponse.json({ error: 'unknown_package' }, { status: 400 })
-  }
-  if (pkg.contactOnly || pkg.priceCents === null) {
-    return NextResponse.json({ error: 'contact_only' }, { status: 400 })
+  // 2. Paket suchen – oder dynamisches Projekt-Paket
+  const PRICE_PER_PROJECT_CENTS = 120
+
+  let lineItemName: string
+  let lineItemDesc: string
+  let priceCents:   number
+  let metaAppId:    string
+  let metaPackageId: string
+  let metaMaxGpts:   string
+  let metaMaxProjects: string
+  let currency = 'eur'
+  let successUrl: string
+  let cancelUrl: string
+
+  if (body.packageId === 'projects') {
+    const count = body.projectCount ?? 1
+    priceCents    = count * PRICE_PER_PROJECT_CENTS
+    lineItemName  = `GPT Vault – Projekte (${count})`
+    lineItemDesc  = `Backup von ${count} ChatGPT-Projekt${count === 1 ? '' : 'en'} · 1,20 € / Projekt`
+    metaAppId     = 'gpt-vault-project'
+    metaPackageId = 'projects'
+    metaMaxGpts   = '0'
+    metaMaxProjects = String(count)
+  } else {
+    const pkg = packages.find((p) => p.id === body.packageId)
+    if (!pkg) {
+      return NextResponse.json({ error: 'unknown_package' }, { status: 400 })
+    }
+    if (pkg.contactOnly || pkg.priceCents === null) {
+      return NextResponse.json({ error: 'contact_only' }, { status: 400 })
+    }
+    priceCents    = pkg.priceCents
+    currency      = pkg.currency.toLowerCase()
+    lineItemName  = `GPT Vault – ${pkg.name}`
+    lineItemDesc  = pkg.description
+    metaAppId     = 'gpt-vault'
+    metaPackageId = pkg.id
+    metaMaxGpts   = String(pkg.gpts ?? 0)
+    metaMaxProjects = '0'
   }
 
   // 3. Stripe initialisieren
@@ -55,6 +88,11 @@ export async function POST(request: Request) {
 
   // 4. Basis-URL
   const baseUrl = process.env.NEXT_PUBLIC_HUB_BASE_URL ?? 'http://localhost:3004'
+  successUrl =
+    metaAppId === 'gpt-vault-project'
+      ? `${baseUrl}/gpt-vault/success?mode=projects&session_id={CHECKOUT_SESSION_ID}`
+      : `${baseUrl}/gpt-vault/success?session_id={CHECKOUT_SESSION_ID}`
+  cancelUrl = `${baseUrl}/gpt-vault`
 
   // 5. Checkout Session erstellen
   try {
@@ -66,22 +104,23 @@ export async function POST(request: Request) {
         {
           quantity: 1,
           price_data: {
-            currency:     pkg.currency.toLowerCase(),
-            unit_amount:  pkg.priceCents,
+            currency,
+            unit_amount:  priceCents,
             product_data: {
-              name:        `GPT Vault – ${pkg.name}`,
-              description: pkg.description,
+              name:        lineItemName,
+              description: lineItemDesc,
             },
           },
         },
       ],
       metadata: {
-        app_id:     'gpt-vault',
-        package_id: pkg.id,
-        max_gpts:   String(pkg.gpts ?? 0),
+        app_id:        metaAppId,
+        package_id:    metaPackageId,
+        max_gpts:      metaMaxGpts,
+        max_projects:  metaMaxProjects,
       },
-      success_url: `${baseUrl}/gpt-vault/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url:  `${baseUrl}/gpt-vault`,
+      success_url: successUrl,
+      cancel_url:  cancelUrl,
     })
 
     return NextResponse.json({ url: session.url })
