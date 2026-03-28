@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KI-Governance Realitätscheck · Dr. DirKInstitute</title>
+  <meta name="description" content="Bestimmen Sie den KI-Governance-Reifegrad Ihres Unternehmens in 5 Minuten – für Führungskräfte und Entscheider." />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg: #f5f7fb;
+      --bg-grad: radial-gradient(circle at 10% 0%, #e8efff, #f5f7fb 45%);
+      --surface: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --border: #dbe3f0;
+      --primary: #2563eb;
+      --primary-dark: #1e3a8a;
+      --primary-hover: #1d4ed8;
+      --focus: rgba(37,99,235,0.12);
+      --success: #166534;
+      --success-bg: #f0fdf4;
+      --warn: #92400e;
+      --warn-bg: #fffbeb;
+      --danger: #991b1b;
+      --danger-bg: #fef2f2;
+      --radius: 12px;
+      --max: 1100px;
+    }
+
+    *{ box-sizing: border-box; margin: 0; padding: 0; }
+    html{ scroll-behavior: smooth; }
+    body{
+      font-family: 'DM Sans', Arial, sans-serif;
+      background: var(--bg);
+      background-image: var(--bg-grad);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ── Wasserzeichen ── */
+    .watermark{
+      position: fixed; top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+      width: 60vw; max-width: 580px;
+      opacity: 0.055; filter: grayscale(1);
+      mix-blend-mode: multiply;
+      pointer-events: none; z-index: 0;
+      user-select: none;
+    }
+
+    /* ── Header ── */
+    .site-header{
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 36px; height: 64px;
+      background: var(--primary-dark);
+      box-shadow: 0 2px 12px rgba(30,58,138,0.18);
+    }
+    .logo-wrap{
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 8px; padding: 5px 10px;
+      display: flex; align-items: center;
+    }
+    .logo-left{ height: 38px; width: auto; max-width: 150px; object-fit: contain; }
+    .logo-right{ height: 30px; width: auto; max-width: 110px; object-fit: contain; }
+    .header-brand{
+      font-family: 'DM Mono', monospace;
+      font-size: 10px; font-weight: 500;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: rgba(255,255,255,0.75);
+    }
+    .back-link{
+      font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.8);
+      text-decoration: none; display: flex; align-items: center; gap: 5px;
+      transition: color 0.15s;
+    }
+    .back-link:hover{ color: #fff; }
+
+    /* ── Container ── */
+    .container{
+      width: min(var(--max), calc(100% - 32px));
+      margin: 0 auto;
+      position: relative; z-index: 1;
+    }
+
+    /* ── Hero ── */
+    .hero{
+      padding: 64px 0 56px;
+      border-bottom: 1px solid var(--border);
+    }
+    .hero-grid{
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 40px; align-items: center;
+    }
+    .eyebrow{
+      display: inline-block;
+      font-family: 'DM Mono', monospace;
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--primary);
+      background: rgba(37,99,235,0.08);
+      padding: 5px 12px; border-radius: 20px;
+      margin-bottom: 20px;
+    }
+    h1{ font-size: clamp(1.9rem, 4vw, 3.2rem); line-height: 1.15; font-weight: 700; color: var(--primary-dark); margin-bottom: 16px; }
+    h2{ font-size: clamp(1.4rem, 2.5vw, 2rem); line-height: 1.2; font-weight: 700; color: var(--primary-dark); margin-bottom: 14px; }
+    h3{ font-size: 1.05rem; font-weight: 700; color: var(--primary-dark); margin-bottom: 10px; }
+    .lead{ font-size: 1.05rem; color: var(--muted); max-width: 56ch; margin-bottom: 14px; line-height: 1.7; }
+    .cta-row{ display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+
+    /* ── Portrait ── */
+    .portrait-card{
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 4px 24px rgba(37,99,235,0.06);
+    }
+    .portrait-img{
+      width: 100%; aspect-ratio: 4/5;
+      object-fit: cover; object-position: center top;
+      border-radius: 12px;
+      display: block;
+    }
+    .portrait-name{
+      margin-top: 14px;
+      font-weight: 700; font-size: 15px; color: var(--primary-dark);
+    }
+    .portrait-role{
+      font-size: 12px; color: var(--muted);
+      font-family: 'DM Mono', monospace;
+      text-transform: uppercase; letter-spacing: 0.06em;
+    }
+
+    /* ── Buttons ── */
+    .btn{
+      display: inline-flex; align-items: center; justify-content: center;
+      min-height: 46px; padding: 0 22px;
+      border-radius: 8px; text-decoration: none;
+      border: 1.5px solid transparent;
+      font-weight: 700; cursor: pointer;
+      transition: all 0.18s; font-size: 14px;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .btn-primary{ background: var(--primary); color: #fff; border-color: var(--primary); }
+    .btn-primary:hover{ background: var(--primary-hover); border-color: var(--primary-hover); }
+    .btn-secondary{ background: transparent; color: var(--primary); border-color: var(--primary); }
+    .btn-secondary:hover{ background: var(--focus); }
+    .btn-ghost{ background: transparent; color: var(--muted); border-color: var(--border); }
+    .btn-ghost:hover{ border-color: var(--primary); color: var(--primary); }
+
+    /* ── Check Section ── */
+    .section{ padding: 60px 0; }
+    .check-wrap{
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 24px; align-items: start;
+    }
+
+    /* ── Card ── */
+    .card{
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: 0 1px 6px rgba(37,99,235,0.04);
+    }
+    .card-body{ padding: 32px; }
+    .side-panel{ padding: 24px; position: sticky; top: 80px; }
+
+    /* ── Questions ── */
+    .question{ padding: 22px 0; border-top: 1px solid var(--border); }
+    .question:first-of-type{ border-top: none; padding-top: 4px; }
+    .question h3{ font-size: 1rem; color: var(--text); margin-bottom: 12px; }
+    .options{ display: grid; gap: 8px; margin-top: 12px; }
+    .option{
+      display: flex; gap: 12px; align-items: flex-start;
+      padding: 12px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px; background: #fafbfe;
+      cursor: pointer; transition: all 0.15s;
+      font-size: 13.5px; line-height: 1.5;
+    }
+    .option:hover{ border-color: var(--primary); background: rgba(37,99,235,0.04); }
+    .option input{ margin-top: 3px; accent-color: var(--primary); flex-shrink: 0; }
+
+    /* ── Result ── */
+    .result-box{
+      display: none; margin-top: 24px;
+      padding: 24px; border-radius: 10px;
+      border: 1.5px solid var(--border);
+      background: rgba(37,99,235,0.03);
+    }
+    .result-box.show{ display: block; }
+    .status{
+      display: inline-block; padding: 5px 14px;
+      border-radius: 20px; font-size: 12px; font-weight: 700;
+      font-family: 'DM Mono', monospace; letter-spacing: 0.04em;
+      text-transform: uppercase; margin-bottom: 12px;
+    }
+    .status.low{ background: var(--success-bg); color: var(--success); }
+    .status.mid{ background: var(--warn-bg); color: var(--warn); }
+    .status.high{ background: var(--danger-bg); color: var(--danger); }
+
+    .maturity-badge{
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 16px;
+      background: rgba(37,99,235,0.08); color: var(--primary);
+      border-radius: 20px; font-weight: 800; font-size: 14px;
+      margin-bottom: 14px;
+    }
+    .maturity-scale{
+      display: grid; grid-template-columns: repeat(5,1fr);
+      gap: 6px; margin: 16px 0 0;
+    }
+    .maturity-step{
+      text-align: center; padding: 8px 4px;
+      border-radius: 8px; border: 1.5px solid var(--border);
+      background: #fafbfe; font-size: 11px;
+      color: var(--muted); font-weight: 700; line-height: 1.4;
+    }
+    .maturity-step.active{
+      background: var(--primary); color: #fff; border-color: var(--primary);
+    }
+
+    .disclaimer{
+      margin-top: 16px; padding: 12px 14px;
+      border-radius: 8px; background: #fafbfe;
+      border: 1px solid var(--border);
+      color: var(--muted); font-size: 12.5px; line-height: 1.6;
+    }
+
+    /* ── Radar ── */
+    .result-section{ padding: 48px 0; display: none; }
+    .result-layout{
+      display: grid; grid-template-columns: 1.1fr 0.9fr;
+      gap: 24px; align-items: start;
+    }
+    .radar-card{ padding: 24px; }
+    .radar-wrap{ position: relative; width: 100%; height: 380px; margin-top: 16px; }
+    .radar-wrap canvas{ width: 100% !important; height: 100% !important; display: block; }
+
+    /* ── Trust Grid ── */
+    .trust-grid{ display: grid; grid-template-columns: repeat(2,1fr); gap: 20px; }
+    .trust-card{ padding: 28px; }
+
+    /* ── Kontakt ── */
+    .kontakt-card{ padding: 48px; text-align: center; }
+    .kontakt-card h2{ margin-bottom: 12px; }
+    .kontakt-card p{ color: var(--muted); max-width: 62ch; margin: 0 auto 8px; }
+
+    /* ── Side Panel items ── */
+    .side-item{ margin-bottom: 18px; padding-bottom: 18px; border-bottom: 1px solid var(--border); }
+    .side-item:last-child{ border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    .side-icon{ font-size: 22px; margin-bottom: 6px; }
+    .side-item h4{ font-size: 13px; font-weight: 700; color: var(--primary-dark); margin-bottom: 4px; }
+    .side-item p{ font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+    /* ── Footer ── */
+    .site-footer{
+      margin-top: 40px; padding: 16px 36px;
+      border-top: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center;
+      font-family: 'DM Mono', monospace; font-size: 10px;
+      color: var(--muted); letter-spacing: 0.04em;
+      position: relative; z-index: 1;
+    }
+
+    @media (max-width: 860px){
+      .hero-grid, .check-wrap, .result-layout, .trust-grid{ grid-template-columns: 1fr; }
+      .side-panel{ position: static; }
+      .maturity-scale{ grid-template-columns: repeat(3,1fr); }
+      .radar-wrap{ height: 300px; }
+      .site-header{ padding: 0 16px; }
+      .kontakt-card{ padding: 32px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Wasserzeichen -->
+  <img src="/logo-dirk.jpg" aria-hidden="true" class="watermark" />
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="logo-wrap">
+      <img src="/k&n_logo_.png" alt="K&N EDV-Konzepte" class="logo-left" />
+    </div>
+    <a href="/" class="back-link">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      Zurück
+    </a>
+    <div class="logo-wrap">
+      <img src="/logo-dirk.jpg" alt="Dr. DirKInstitute" class="logo-right" />
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container hero-grid">
+      <div>
+        <span class="eyebrow">KI-Governance · Entscheidbarkeit · Auditfähigkeit</span>
+        <h1>Können Sie Ihre KI-Entscheidungen in&nbsp;5&nbsp;Minuten verantworten?</h1>
+        <p class="lead"><strong>Wenn nicht, tragen Sie das Risiko – nicht Ihre IT.</strong></p>
+        <p class="lead">Ich helfe Führungskräften dabei, KI-Entscheidungen für Management, Revision und Audit nachvollziehbar zu machen – bevor aus Innovation ein Haftungsfall wird.</p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="#check">Realitätscheck starten</a>
+          <a class="btn btn-secondary" href="https://terminbuchung-ten.vercel.app/" target="_blank" rel="noopener noreferrer">Termin buchen</a>
+        </div>
+      </div>
+
+      <div class="portrait-card">
+        <img src="/dirk-photo.jpg" alt="Dr. Dirk Kötting" class="portrait-img" />
+        <div class="portrait-name">Dr. Dirk Kötting</div>
+        <div class="portrait-role">Dr. DirKInstitute · KI-Governance &amp; Beratung</div>
+      </div>
+    </div>
+  </section>
+
+  <main>
+    <!-- Check -->
+    <section class="section" id="check">
+      <div class="container check-wrap">
+        <div class="card">
+          <div class="card-body">
+            <span class="eyebrow">Ihr 5-Minuten-Check</span>
+            <h2>Reifegrad Ihrer KI-Governance erfassen</h2>
+            <p style="color:var(--muted); font-size:14px; margin-bottom:4px;">Mehrfachnennungen bei den Einsatzfeldern sind möglich. Das Ergebnis zeigt Reifegrad, Risiko und Einzelachsen im Spinnennetz.</p>
+
+            <form id="maturityForm">
+              <div class="question">
+                <h3>1. Wo wird KI bei Ihnen bereits genutzt? <span style="font-weight:400;color:var(--muted)">(Mehrfachauswahl)</span></h3>
+                <div class="options">
+                  <label class="option"><input type="checkbox" name="q1" value="1"> Interne Assistenz, Wissensarbeit, Texterstellung</label>
+                  <label class="option"><input type="checkbox" name="q1" value="1"> Dokumentenanalyse, Recherche, Zusammenfassungen</label>
+                  <label class="option"><input type="checkbox" name="q1" value="2"> Kundenkommunikation oder Service</label>
+                  <label class="option"><input type="checkbox" name="q1" value="3"> Entscheidungsunterstützung oder Priorisierung</label>
+                  <label class="option"><input type="checkbox" name="q1" value="3"> Automatisierte Klassifikation, Bewertung oder Freigabeprozesse</label>
+                </div>
+              </div>
+
+              <div class="question">
+                <h3>2. Können Sie erklären, auf welcher Datenbasis die KI arbeitet?</h3>
+                <div class="options">
+                  <label class="option"><input type="radio" name="q2" value="4"> Vollständig</label>
+                  <label class="option"><input type="radio" name="q2" value="3"> Überwiegend</label>
+                  <label class="option"><input type="radio" name="q2" value="2"> Teilweise</label>
+                  <label class="option"><input type="radio" name="q2" value="1"> Kaum / gar nicht</label>
+                </div>
+              </div>
+
+              <div class="question">
+                <h3>3. Können Sie die Entscheidungslogik gegenüber Management oder Revision begründen?</h3>
+                <div class="options">
+                  <label class="option"><input type="radio" name="q3" value="4"> Jederzeit</label>
+                  <label class="option"><input type="radio" name="q3" value="3"> Mit vertretbarem Aufwand</label>
+                  <label class="option"><input type="radio" name="q3" value="2"> Nur punktuell</label>
+                  <label class="option"><input type="radio" name="q3" value="1"> Nein</label>
+                </div>
+              </div>
+
+              <div class="question">
+                <h3>4. Gibt es klare Verantwortlichkeiten für Einsatz, Kontrolle und Freigabe?</h3>
+                <div class="options">
+                  <label class="option"><input type="radio" name="q4" value="4"> Ja, klar definiert</label>
+                  <label class="option"><input type="radio" name="q4" value="3"> Größtenteils</label>
+                  <label class="option"><input type="radio" name="q4" value="2"> Teilweise / unklar</label>
+                  <label class="option"><input type="radio" name="q4" value="1"> Nein</label>
+                </div>
+              </div>
+
+              <div class="question">
+                <h3>5. Wie kritisch wären Fehlentscheidungen Ihrer KI?</h3>
+                <div class="options">
+                  <label class="option"><input type="radio" name="q5" value="4"> Gering</label>
+                  <label class="option"><input type="radio" name="q5" value="3"> Mittel</label>
+                  <label class="option"><input type="radio" name="q5" value="2"> Hoch</label>
+                  <label class="option"><input type="radio" name="q5" value="1"> Sehr hoch / geschäftskritisch</label>
+                </div>
+              </div>
+
+              <div class="cta-row" style="margin-top:8px;">
+                <button type="button" class="btn btn-primary" onclick="evaluateMaturity()">Reifegrad anzeigen →</button>
+                <button type="reset" class="btn btn-ghost" onclick="resetResult()">Zurücksetzen</button>
+              </div>
+            </form>
+
+            <div id="resultBox" class="result-box">
+              <div id="statusBadge" class="status mid">Auswertung</div>
+              <div id="maturityBadge" class="maturity-badge">&#9679; Reifegrad: Level 3 von 5</div>
+              <h3 id="resultTitle">Ihr Ergebnis</h3>
+              <p id="resultText" style="color:var(--muted);font-size:14px;margin-bottom:10px;"></p>
+              <ul id="resultBullets" style="color:var(--muted);font-size:14px;padding-left:18px;line-height:1.8;"></ul>
+
+              <div id="maturityScale" class="maturity-scale">
+                <div class="maturity-step" data-level="1">Level 1<br>Unstrukturiert</div>
+                <div class="maturity-step" data-level="2">Level 2<br>Sensibilisiert</div>
+                <div class="maturity-step" data-level="3">Level 3<br>Etabliert</div>
+                <div class="maturity-step" data-level="4">Level 4<br>Gesteuert</div>
+                <div class="maturity-step" data-level="5">Level 5<br>Belastbar</div>
+              </div>
+
+              <div class="disclaimer">
+                <strong>Hinweis:</strong> Dieses Ergebnis basiert auf Ihren Antworten und stellt eine erste Indikation dar. Eine belastbare fachliche Einordnung und konkrete Handlungsempfehlungen erfolgen im persönlichen Austausch.
+              </div>
+
+              <div class="cta-row" style="margin-top:20px;">
+                <a class="btn btn-primary" href="https://terminbuchung-ten.vercel.app/" target="_blank" rel="noopener noreferrer">Termin buchen</a>
+                <button class="btn btn-ghost" type="button" onclick="window.print()">Ergebnis drucken</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="card side-panel">
+          <span class="eyebrow">Was sichtbar wird</span>
+          <h3 style="margin-bottom:20px;">Managementfähiger Reifegrad statt nur Ampel</h3>
+          <div class="side-item">
+            <div class="side-icon">📊</div>
+            <h4>Reifegrad Level 1–5</h4>
+            <p>Einordnung Ihrer KI-Governance auf einer strukturierten 5-stufigen Skala.</p>
+          </div>
+          <div class="side-item">
+            <div class="side-icon">🕸️</div>
+            <h4>Spinnennetz-Profil</h4>
+            <p>Visualisierung auf 5 Achsen: Einsatzkomplexität, Datenbasis, Nachvollziehbarkeit, Verantwortlichkeit, Kritikalität.</p>
+          </div>
+          <div class="side-item">
+            <div class="side-icon">🎯</div>
+            <h4>Konkrete Handlungsfelder</h4>
+            <p>Priorisierte Maßnahmen basierend auf Ihrem Reifegrad.</p>
+          </div>
+          <div class="side-item">
+            <div class="side-icon">⏱️</div>
+            <h4>5 Minuten</h4>
+            <p>Keine Registrierung. Kein Dateneingabe. Sofortiges Ergebnis.</p>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- Radar -->
+    <section class="result-section" id="resultSection">
+      <div class="container result-layout">
+        <div class="card radar-card">
+          <span class="eyebrow">Ihr Reifegradprofil</span>
+          <h3>Spinnennetz-Analyse</h3>
+          <div class="radar-wrap">
+            <canvas id="radarChart"></canvas>
+          </div>
+        </div>
+        <div class="card trust-card">
+          <span class="eyebrow">Interpretation</span>
+          <h3>Wie Sie den Reifegrad lesen</h3>
+          <p style="color:var(--muted);font-size:14px;line-height:1.7;">Je größer und ausgewogener die Fläche, desto belastbarer ist Ihre KI-Governance. Kritisch sind vor allem hohe Einsatzkomplexität bei gleichzeitig schwacher Nachvollziehbarkeit oder unklarer Verantwortung.</p>
+          <div style="margin-top:20px;padding:16px;background:rgba(37,99,235,0.05);border-radius:8px;border:1px solid var(--border);">
+            <p style="font-size:13px;color:var(--primary-dark);font-weight:600;margin-bottom:6px;">Nächster Schritt</p>
+            <p style="font-size:13px;color:var(--muted);">Im vertraulichen 30-Minuten-Gespräch klären wir, welche Maßnahmen für Ihre kritischsten Use Cases wirklich nötig sind.</p>
+            <a class="btn btn-primary" href="https://terminbuchung-ten.vercel.app/" target="_blank" rel="noopener noreferrer" style="margin-top:14px;width:100%;justify-content:center;">Termin buchen →</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Trust Grid -->
+    <section class="section">
+      <div class="container trust-grid">
+        <div class="card trust-card">
+          <span class="eyebrow">Was aktuell schiefläuft</span>
+          <h3>Viele KI-Initiativen sind produktiv – aber nicht prüffähig.</h3>
+          <p style="color:var(--muted);font-size:14px;margin-top:8px;">Nutzung wächst schneller als Verantwortung, Dokumentation und Governance-Strukturen.</p>
+        </div>
+        <div class="card trust-card">
+          <span class="eyebrow">Was Sie konkret erhalten</span>
+          <h3>Ein klares Bild Ihrer KI-Reife.</h3>
+          <p style="color:var(--muted);font-size:14px;margin-top:8px;">Sie erkennen auf einen Blick, wo Handlungsbedarf besteht und welcher nächste Governance-Schritt priorisiert werden sollte.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Kontakt -->
+    <section class="section" id="kontakt">
+      <div class="container">
+        <div class="card kontakt-card">
+          <span class="eyebrow">Nächster Schritt</span>
+          <h2>Aus Reifegrad wird Führungsfähigkeit</h2>
+          <p>Im vertraulichen 30-Minuten-Check klären wir, welche Governance-Maßnahmen für Ihre kritischsten KI-Use-Cases wirklich nötig sind.</p>
+          <p style="font-size:13px;">Das Ergebnis ist eine erste Indikation. Die belastbare Einordnung und Ableitung konkreter Maßnahmen erfolgt im persönlichen Austausch.</p>
+          <div class="cta-row" style="justify-content:center;">
+            <a class="btn btn-primary" href="https://terminbuchung-ten.vercel.app/" target="_blank" rel="noopener noreferrer">Termin buchen</a>
+            <a class="btn btn-secondary" href="#check">Check erneut starten</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <span>KI-Governance Realitätscheck · Dr. DirKInstitute · Stand 2026</span>
+    <span>Kein Rechtsrat · Für interne Governance &amp; Entscheidungsunterstützung</span>
+  </footer>
+
+  <script>
+    let radar;
+
+    function getCheckedValues(name){
+      return Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(el => Number(el.value));
+    }
+    function getRadioValue(name){
+      const checked = document.querySelector(`input[name="${name}"]:checked`);
+      return checked ? Number(checked.value) : null;
+    }
+
+    function evaluateMaturity(){
+      const q1Values = getCheckedValues("q1");
+      const q2 = getRadioValue("q2");
+      const q3 = getRadioValue("q3");
+      const q4 = getRadioValue("q4");
+      const q5 = getRadioValue("q5");
+
+      if(q1Values.length === 0 || q2 === null || q3 === null || q4 === null || q5 === null){
+        alert("Bitte beantworten Sie alle Fragen.");
+        return;
+      }
+
+      const q1Sum = q1Values.reduce((a,b) => a+b, 0);
+      const useCaseComplexity = Math.max(1, 5 - Math.min(4, q1Sum));
+      const dataBasis = q2;
+      const explainability = q3;
+      const accountability = q4;
+      const criticalityControl = q5;
+      const avg = (useCaseComplexity + dataBasis + explainability + accountability + criticalityControl) / 5;
+
+      let level = avg < 1.8 ? 1 : avg < 2.6 ? 2 : avg < 3.3 ? 3 : avg < 4.1 ? 4 : 5;
+
+      let statusClass, statusText, title, text, bullets;
+
+      if(level <= 2){
+        statusClass = "high"; statusText = "Kritisch";
+        title = "Ihre KI-Nutzung befindet sich noch in einem unreifen Governance-Zustand.";
+        text = "Insbesondere bei Verantwortung, Nachvollziehbarkeit und beherrschter Kritikalität bestehen deutliche Risiken.";
+        bullets = ["Governance-Owner benennen.","Kritische KI-Einsätze inventarisieren.","Mindestdokumentation für Daten, Entscheidungen und Freigaben einführen."];
+      } else if(level >= 4){
+        statusClass = "low"; statusText = "Stabil";
+        title = "Ihre KI-Governance wirkt bereits vergleichsweise gut gesteuert.";
+        text = "Die Grundlagen für belastbare Führbarkeit sind vorhanden. Nun geht es um Konsolidierung, Standardisierung und skalierbare Kontrolle.";
+        bullets = ["Standards über weitere Use Cases ausrollen.","Kontrollmechanismen regelmäßig reviewen.","Audit- und Management-Reporting vereinheitlichen."];
+      } else {
+        statusClass = "mid"; statusText = "Sensibel";
+        title = "Ihre KI-Nutzung ist teilweise etabliert, aber noch nicht vollständig belastbar.";
+        text = "Grundstrukturen sind erkennbar vorhanden. Für Management-, Revisions- und Auditfähigkeit fehlen konsistente Governance-Mechanismen.";
+        bullets = ["Kritische Use Cases priorisieren und dokumentieren.","Verantwortlichkeiten und Freigabelogik klar festlegen.","Entscheidungslogik und Datengrundlage revisionsfest strukturieren."];
+      }
+
+      document.getElementById("resultBox").classList.add("show");
+      document.getElementById("resultSection").style.display = "block";
+
+      const badge = document.getElementById("statusBadge");
+      badge.className = "status " + statusClass;
+      badge.textContent = statusText;
+      document.getElementById("maturityBadge").textContent = `\u25CF Reifegrad: Level ${level} von 5`;
+      document.getElementById("resultTitle").textContent = title;
+      document.getElementById("resultText").textContent = text;
+      document.getElementById("resultBullets").innerHTML = bullets.map(x => `<li>${x}</li>`).join("");
+      document.querySelectorAll(".maturity-step").forEach(step => {
+        step.classList.toggle("active", Number(step.dataset.level) === level);
+      });
+
+      drawRadar([useCaseComplexity, dataBasis, explainability, accountability, criticalityControl]);
+      document.getElementById("resultBox").scrollIntoView({behavior:"smooth", block:"start"});
+    }
+
+    function drawRadar(values){
+      const ctx = document.getElementById("radarChart");
+      if(radar) radar.destroy();
+      radar = new Chart(ctx, {
+        type: "radar",
+        data: {
+          labels: ["Einsatzkomplexität","Datenbasis","Nachvollziehbarkeit","Verantwortlichkeit","Kritikalitätsbeherrschung"],
+          datasets: [{
+            label: "Reifegradprofil",
+            data: values,
+            fill: true,
+            backgroundColor: "rgba(37,99,235,0.12)",
+            borderColor: "rgba(37,99,235,0.9)",
+            pointBackgroundColor: "rgba(37,99,235,1)",
+            pointBorderColor: "#fff",
+            pointHoverBackgroundColor: "#fff",
+            pointHoverBorderColor: "rgba(37,99,235,1)"
+          }]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          scales: {
+            r: {
+              min: 0, max: 5,
+              ticks: { stepSize: 1, backdropColor: "transparent", color: "#6b7280" },
+              grid: { color: "rgba(30,58,138,0.1)" },
+              angleLines: { color: "rgba(30,58,138,0.1)" },
+              pointLabels: { color: "#1f2937", font: { size: 12, weight: "600", family: "'DM Sans'" } }
+            }
+          },
+          plugins: { legend: { display: false } }
+        }
+      });
+    }
+
+    function resetResult(){
+      document.getElementById("resultBox").classList.remove("show");
+      document.getElementById("resultSection").style.display = "none";
+      document.querySelectorAll(".maturity-step").forEach(s => s.classList.remove("active"));
+      if(radar){ radar.destroy(); radar = null; }
+    }
+  </script>
+</body>
+</html>

@@ -75,12 +75,10 @@ export default function Home() {
           Wir machen KI-Entscheidungen in 5 Minuten belastbar – rechtlich und operativ.
         </p>
         <a
-          href="https://be-ai-safe.vercel.app/de"
+          href="/realitaetscheck/"
           className={styles.heroCta}
-          target="_blank"
-          rel="noopener noreferrer"
         >
-          Realitätscheck starten →
+          KI-Governance-Status prüfen →
         </a>
         <p className={styles.heroTrust}>
           Keine Registrierung · Sofortiger Start · Ergebnis in 5 Minuten
