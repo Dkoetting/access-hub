@@ -44,7 +44,7 @@ export default function Home() {
       <header className={styles.headerBar}>
         <div className={styles.headerLogoWrap}>
           <Image
-            src="/k&n_logo_.png"
+            src="/kn-logo.png"
             alt="K&N EDV-Konzepte"
             width={150}
             height={38}
@@ -52,13 +52,12 @@ export default function Home() {
             priority
           />
         </div>
-        <span className={styles.headerBrand}>Dr. DirKInstitute</span>
         <div className={styles.headerLogoWrap}>
           <Image
             src="/logo-dirk.jpg"
             alt="Dr. DirKInstitute"
             width={110}
-            height={30}
+            height={38}
             className={styles.headerLogoRight}
             priority
           />

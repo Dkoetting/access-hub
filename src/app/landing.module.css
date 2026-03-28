@@ -33,22 +33,14 @@
 .headerLogoLeft {
   height: 38px;
   width: auto;
-  max-width: 150px;
+  max-width: 160px;
   object-fit: contain;
 }
 
-.headerBrand {
-  font-size: 0.85rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,0.9);
-}
-
 .headerLogoRight {
-  height: 30px;
+  height: 38px;
   width: auto;
-  max-width: 110px;
+  max-width: 120px;
   object-fit: contain;
   border-radius: 0;
 }
