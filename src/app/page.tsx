@@ -122,7 +122,7 @@ export default function Home() {
       <section className={styles.trust}>
         <div className={styles.trustInner}>
           <Image
-            src="/logo-dirk.jpg"
+            src="/dirk-photo.jpg"
             alt="Dr. Dirk Kötting"
             width={80}
             height={80}
