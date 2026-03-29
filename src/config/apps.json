@@ -29,7 +29,7 @@
     "description_en": "AI Data Traffic Light – capture and evaluate AI use cases.",
     "oneTimePriceCents": 2500,
     "accessUrlEnv": "APP_URL_AI_TRAFFIC_SEVEN",
-    "defaultAccessUrl": "https://ai-traffic-seven.vercel.app/"
+    "defaultAccessUrl": "https://ki-datenampel.vercel.app/"
   },
   {
     "id": "gpt-vault",
