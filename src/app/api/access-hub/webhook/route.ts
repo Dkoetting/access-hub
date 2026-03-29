@@ -159,8 +159,9 @@ export async function POST(request: Request) {
     },
   ])
 
-  const baseUrl   = process.env.NEXT_PUBLIC_HUB_BASE_URL ?? 'https://access-hub-tan.vercel.app'
-  const accessUrl = `${baseUrl}/access?token=${encodeURIComponent(plainToken)}`
+  // Direkt zur Tool-URL mit Token (einmaliger Zugang)
+  const toolBaseUrl = app.accessUrl.replace(/\/$/, '')
+  const accessUrl   = `${toolBaseUrl}?token=${encodeURIComponent(plainToken)}`
 
   // 5. Rechnung PDF generieren
   let pdfBuffer: Buffer | null = null
