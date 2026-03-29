@@ -3,7 +3,9 @@
 export type AppDefinition = {
   id: string
   name: string
+  name_en?: string
   description?: string
+  description_en?: string
   oneTimePriceCents: number
   accessUrl: string
   /** true = lokales CLI-Tool (kein Web-Redirect, Token wird manuell eingegeben) */
@@ -17,7 +19,9 @@ export type AppDefinition = {
 type AppConfigItem = {
   id: string
   name: string
+  name_en?: string
   description?: string
+  description_en?: string
   oneTimePriceCents: number
   cliTool?: boolean
   redirectUrl?: string
@@ -38,7 +42,9 @@ export function getAvailableApps(): AppDefinition[] {
   return (appsConfig as AppConfigItem[]).map((item) => ({
     id: item.id,
     name: item.name,
+    name_en: item.name_en,
     description: item.description,
+    description_en: item.description_en,
     oneTimePriceCents: item.oneTimePriceCents,
     cliTool: item.cliTool ?? false,
     redirectUrl: item.redirectUrl,

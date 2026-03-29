@@ -40,6 +40,7 @@ const T = {
     buyBtn:       'Jetzt kaufen →',
     toApp:        'Zur App →',
     footerSub:    '🔒 Sichere Zahlung via Stripe · Rechnung per E-Mail',
+    vatLabel:     'zzgl. 19\u00a0% MwSt.',
   },
   en: {
     eyebrow:      'AI Governance · Decision Confidence',
@@ -62,6 +63,7 @@ const T = {
     buyBtn:       'Buy now →',
     toApp:        'To App →',
     footerSub:    '🔒 Secure payment via Stripe · Invoice by email',
+    vatLabel:     'excl. 19\u00a0% VAT',
   },
 }
 
@@ -177,8 +179,8 @@ export default function Home() {
               <div key={app.id} className={styles.card}>
                 <div className={styles.cardIcon}>{APP_ICONS[app.id] ?? '🤖'}</div>
                 <div className={styles.cardBody}>
-                  <h3 className={styles.cardTitle}>{app.name}</h3>
-                  <p className={styles.cardDesc}>{app.description}</p>
+                  <h3 className={styles.cardTitle}>{lang === 'en' ? (app.name_en ?? app.name) : app.name}</h3>
+                  <p className={styles.cardDesc}>{lang === 'en' ? (app.description_en ?? app.description) : app.description}</p>
                   <div className={styles.badgeRow}>
                     {app.maxUses === 1 && (
                       <span className={styles.badge}>{t.badge}</span>
@@ -192,7 +194,7 @@ export default function Home() {
                   {!isRedirect && (
                     <div className={styles.priceBlock}>
                       <span className={styles.priceGross}>{fmt(grossCents)}</span>
-                      <span className={styles.priceNet}>({fmt(netCents)} zzgl. 19&nbsp;% MwSt.)</span>
+                      <span className={styles.priceNet}>({fmt(netCents)} {t.vatLabel})</span>
                     </div>
                   )}
                   {isRedirect ? (

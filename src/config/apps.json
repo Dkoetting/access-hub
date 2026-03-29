@@ -2,7 +2,9 @@
   {
     "id": "k-kausale-kompetenz-test",
     "name": "K² – Kausale Kompetenz",
+    "name_en": "K² – Causal Competence",
     "description": "K² Kausale Kompetenz Test - die Fähigkeit, autonome KI-Entscheidungen E2E zu durchdringen.",
+    "description_en": "K² Causal Competence Test – the ability to fully understand autonomous AI decisions end-to-end.",
     "oneTimePriceCents": 2900,
     "maxUses": 1,
     "accessUrlEnv": "APP_URL_KAUSALE_KOMPETENZ_TEST",
@@ -11,7 +13,9 @@
   {
     "id": "ki-roi-rechner",
     "name": "KI ROI Rechner",
+    "name_en": "AI ROI Calculator",
     "description": "Berechnet wirtschaftlichen Nutzen von KI-Investitionen.",
+    "description_en": "Calculates the economic value of AI investments.",
     "oneTimePriceCents": 1900,
     "maxUses": 1,
     "accessUrlEnv": "APP_URL_KI_ROI_RECHNER",
@@ -20,7 +24,9 @@
   {
     "id": "ai-traffic-seven",
     "name": "AI Traffic Seven",
+    "name_en": "AI Traffic Seven",
     "description": "KI Datenampel - Usecases erfassen  --  Bewertung",
+    "description_en": "AI Data Traffic Light – capture and evaluate AI use cases.",
     "oneTimePriceCents": 2500,
     "accessUrlEnv": "APP_URL_AI_TRAFFIC_SEVEN",
     "defaultAccessUrl": "https://ai-traffic-seven.vercel.app/"
@@ -28,7 +34,9 @@
   {
     "id": "gpt-vault",
     "name": "GPT Vault",
+    "name_en": "GPT Vault",
     "description": "Sichere alle deine Custom GPTs als JSON & Excel – lokal, einmalig, sofort nutzbar. Eigene Pakete ab 4,90 €.",
+    "description_en": "Back up all your Custom GPTs as JSON & Excel – locally, once, ready to use. Own packages from €4.90.",
     "oneTimePriceCents": 490,
     "redirectUrl": "https://gpt-vault-theta.vercel.app/",
     "cliTool": true,
@@ -38,7 +46,9 @@
   {
     "id": "eu-ai-act-navigator",
     "name": "EU AI Act Navigator",
+    "name_en": "EU AI Act Navigator",
     "description": "KI-Anwendungsfall prüfen – Risikoklasse, Pflichten, Compliance-Check nach EU AI Act.",
+    "description_en": "Assess your AI use case – risk class, obligations, compliance check under the EU AI Act.",
     "oneTimePriceCents": 2900,
     "maxUses": 1,
     "accessUrlEnv": "APP_URL_EU_AI_ACT_NAVIGATOR",
@@ -47,7 +57,9 @@
   {
     "id": "be-ai-safe",
     "name": "AI Safe Policy Generator",
+    "name_en": "AI Safe Policy Generator",
     "description": "Erstellt eine maßgeschneiderte KI-Richtlinie für dein Unternehmen – einmalig, sofort einsetzbar.",
+    "description_en": "Creates a tailored AI policy for your organization – once, ready to deploy immediately.",
     "oneTimePriceCents": 4900,
     "maxUses": 1,
     "accessUrlEnv": "APP_URL_BE_AI_SAFE",
