@@ -251,14 +251,14 @@
 }
 
 .trustPhoto {
-  width: 88px;
-  height: 88px;
-  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  border-radius: 16px;
   object-fit: cover;
   object-position: center top;
   flex-shrink: 0;
   border: 3px solid #dbe3f0;
-  box-shadow: 0 4px 16px rgba(30,58,138,0.12);
+  box-shadow: 0 8px 24px rgba(30,58,138,0.15);
 }
 
 .trustText {
