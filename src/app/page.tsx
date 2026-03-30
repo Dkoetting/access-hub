@@ -165,17 +165,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── Trust ── */}
-      <section className={styles.trust}>
-        <div className={styles.trustInner}>
-          <div className={styles.trustText}>
-            <strong className={styles.trustName}>Dr. Dirk Kötting</strong>
-            <span className={styles.trustRole}>{t.trustRole}</span>
-            <p className={styles.trustDesc}>{t.trustDesc}</p>
-          </div>
-        </div>
-      </section>
-
       {/* ── Tools (secondary) ── */}
       <main className={styles.main}>
         <h2 className={styles.sectionTitle}>{t.toolsTitle}</h2>
