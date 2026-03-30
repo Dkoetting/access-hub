@@ -65,6 +65,42 @@
   background: #fff;
 }
 
+/* ── Header Author (rechts) ──────────────────────────────────────────────── */
+.headerAuthor {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.headerAuthorPhoto {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  object-fit: cover;
+  object-position: center top;
+  border: 2px solid rgba(255,255,255,0.25);
+  flex-shrink: 0;
+}
+
+.headerAuthorText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.headerAuthorName {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.2;
+}
+
+.headerAuthorSlogan {
+  font-size: 0.72rem;
+  color: rgba(255,255,255,0.65);
+  line-height: 1.2;
+}
+
 .headerLogoRight {
   height: 44px;
   width: auto;

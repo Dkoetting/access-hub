@@ -100,15 +100,21 @@ export default function Home() {
           >EN</button>
         </div>
 
-        <div className={styles.headerLogoWrap}>
+        <div className={styles.headerAuthor}>
           <Image
-            src="/logo-dirk.jpg"
-            alt="Dr. DirKInstitute"
-            width={110}
-            height={38}
-            className={styles.headerLogoRight}
+            src="/dirk-portrait.jpg"
+            alt="Dr. Dirk Kötting"
+            width={44}
+            height={44}
+            className={styles.headerAuthorPhoto}
             priority
           />
+          <div className={styles.headerAuthorText}>
+            <span className={styles.headerAuthorName}>Dr. Dirk Kötting</span>
+            <span className={styles.headerAuthorSlogan}>
+              {lang === 'de' ? 'Rechtssicher · Strategisch · Praxisnah' : 'Legally sound · Strategic · Practical'}
+            </span>
+          </div>
         </div>
       </header>
 
