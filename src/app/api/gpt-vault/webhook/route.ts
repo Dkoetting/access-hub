@@ -186,6 +186,7 @@ export async function POST(request: Request) {
     await resend.emails.send({
       from:    fromEmail,
       to:      email,
+      cc:      ['buchhaltung@edvkonzepte.de'],
       subject,
       html: `
         <p>Hello${name},</p>
