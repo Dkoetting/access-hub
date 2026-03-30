@@ -141,7 +141,7 @@
 }
 
 .heroPortraitImg {
-  width: 300px;
+  width: 420px;
   height: auto;
   border-radius: 20px;
   object-fit: cover;
@@ -156,7 +156,7 @@
   align-items: center;
   gap: 4px;
   text-align: center;
-  max-width: 300px;
+  max-width: 420px;
 }
 
 .heroPortraitName {
