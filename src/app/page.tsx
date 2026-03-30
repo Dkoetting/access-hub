@@ -258,8 +258,8 @@ export default function Home() {
                 </h3>
                 <p className={styles.cardDesc}>
                   {lang === 'de'
-                    ? 'Versioniert und dokumentiert Custom GPTs/Agenten (Zweck, Datenzugriff, Tools, Freigaben). So entsteht ein Audit-Trail, der Verantwortlichkeiten und Kontrollpflichten abbildet.'
-                    : 'Versions and documents Custom GPTs/agents (purpose, data access, tools, approvals). Creates an audit trail that maps responsibilities and control obligations.'}
+                    ? 'Sichert Custom GPTs und Projekte aus ChatGPT lokal – inkl. Beschreibung, dedizierter JSON-Datei und lokalem Repository. So bleiben Ihre KI-Agenten versioniert, nachvollziehbar und unabhängig von der ChatGPT-Plattform. Ab 4,90 €.'
+                    : 'Saves Custom GPTs and Projects from ChatGPT locally – including description, dedicated JSON file and local repository. Keeps your AI agents versioned, traceable and independent of the ChatGPT platform. From €4.90.'}
                 </p>
               </div>
               <div className={styles.cardFooter}>
