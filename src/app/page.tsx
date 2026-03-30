@@ -126,16 +126,15 @@ export default function Home() {
             <Image
               src="/dirk-portrait.jpg"
               alt="Dr. Dirk Kötting"
-              width={260}
-              height={320}
+              width={320}
+              height={420}
               className={styles.heroPortraitImg}
               priority
             />
             <div className={styles.heroPortraitCaption}>
               <span className={styles.heroPortraitName}>Dr. Dirk Kötting</span>
-              <span className={styles.heroPortraitSlogan}>
-                {lang === 'de' ? 'Rechtssicher · Strategisch · Praxisnah' : 'Legally sound · Strategic · Practical'}
-              </span>
+              <span className={styles.heroPortraitSlogan}>{t.trustRole}</span>
+              <p className={styles.heroPortraitDesc}>{t.trustDesc}</p>
             </div>
           </div>
         </div>
@@ -169,13 +168,6 @@ export default function Home() {
       {/* ── Trust ── */}
       <section className={styles.trust}>
         <div className={styles.trustInner}>
-          <Image
-            src="/dirk-photo.jpg"
-            alt="Dr. Dirk Kötting"
-            width={80}
-            height={80}
-            className={styles.trustPhoto}
-          />
           <div className={styles.trustText}>
             <strong className={styles.trustName}>Dr. Dirk Kötting</strong>
             <span className={styles.trustRole}>{t.trustRole}</span>

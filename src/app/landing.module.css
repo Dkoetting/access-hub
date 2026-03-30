@@ -141,32 +141,40 @@
 }
 
 .heroPortraitImg {
-  width: 220px;
+  width: 300px;
   height: auto;
   border-radius: 20px;
   object-fit: cover;
   object-position: center top;
   border: 3px solid rgba(255,255,255,0.2);
-  box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.40);
 }
 
 .heroPortraitCaption {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 3px;
+  gap: 4px;
   text-align: center;
+  max-width: 300px;
 }
 
 .heroPortraitName {
-  font-size: 0.95rem;
+  font-size: 1rem;
   font-weight: 700;
   color: #fff;
 }
 
 .heroPortraitSlogan {
-  font-size: 0.75rem;
+  font-size: 0.78rem;
   color: rgba(147,197,253,0.9);
+}
+
+.heroPortraitDesc {
+  font-size: 0.78rem;
+  color: rgba(219,234,254,0.8);
+  line-height: 1.5;
+  margin: 4px 0 0;
 }
 
 @media (max-width: 768px) {
