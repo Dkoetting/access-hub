@@ -161,22 +161,22 @@
 }
 
 .heroPortraitName {
-  font-size: 1.4rem;
+  font-size: clamp(1rem, 2vw, 1.2rem);
   font-weight: 800;
   color: #fff;
   letter-spacing: -0.01em;
 }
 
 .heroPortraitSlogan {
-  font-size: 1rem;
+  font-size: clamp(1rem, 2vw, 1.2rem);
   color: rgba(147,197,253,0.95);
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .heroPortraitDesc {
-  font-size: 0.95rem;
+  font-size: clamp(1rem, 2vw, 1.2rem);
   color: rgba(219,234,254,0.9);
-  line-height: 1.65;
+  line-height: 1.6;
   margin: 4px 0 0;
 }
 
