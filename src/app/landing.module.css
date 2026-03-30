@@ -137,44 +137,47 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 14px;
+  gap: 18px;
+  width: 420px;
 }
 
 .heroPortraitImg {
-  width: 420px;
+  width: 100%;
   height: auto;
   border-radius: 20px;
   object-fit: cover;
   object-position: center top;
   border: 3px solid rgba(255,255,255,0.2);
-  box-shadow: 0 20px 60px rgba(0,0,0,0.40);
+  box-shadow: 0 24px 64px rgba(0,0,0,0.45);
 }
 
 .heroPortraitCaption {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
   text-align: center;
-  max-width: 420px;
+  width: 100%;
 }
 
 .heroPortraitName {
-  font-size: 1rem;
-  font-weight: 700;
+  font-size: 1.15rem;
+  font-weight: 800;
   color: #fff;
+  letter-spacing: -0.01em;
 }
 
 .heroPortraitSlogan {
-  font-size: 0.78rem;
+  font-size: 0.85rem;
   color: rgba(147,197,253,0.9);
+  font-weight: 500;
 }
 
 .heroPortraitDesc {
-  font-size: 0.78rem;
+  font-size: 0.82rem;
   color: rgba(219,234,254,0.8);
-  line-height: 1.5;
-  margin: 4px 0 0;
+  line-height: 1.6;
+  margin: 2px 0 0;
 }
 
 @media (max-width: 768px) {
