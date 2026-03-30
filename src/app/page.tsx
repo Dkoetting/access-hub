@@ -40,7 +40,7 @@ const T = {
     outcomesTitle:  'Das Ergebnis',
     outcomes:       ['Prüfbarer Governance-Output für Board & CISO','Nachweisbare Steuerung bei nicht delegierbarer Verantwortung','Board-tauglicher Report: Risikoklasse, Kontrollpfad, Maßnahmen'],
     trustRole:      'Dr. DirKInstitute · KI-Beratung & Governance',
-    trustDesc:      'Ich begleite Führungskräfte dabei, KI-Entscheidungen rechtssicher und operativ belastbar zu machen – ohne Technologiefokus, mit strategischem Blick',
+    trustDesc:      'Ich begleite Führungskräfte dabei, KI-Entscheidungen rechtssicher und operativ belastbar zu machen –\nohne Technologiefokus, mit strategischem Blick',
     toolsTitle:     'Governance-Tools',
     toolsSub:       'Jedes Tool liefert einen konkreten Governance-Output – einzeln nutzbar, gemeinsam wirkungsvoll.',
     controlsTitle:  'Controls & Tooling',
@@ -154,7 +154,7 @@ export default function Home() {
             <div className={styles.heroPortraitCaption}>
               <span className={styles.heroPortraitName}>Dr. Dirk Kötting</span>
               <span className={styles.heroPortraitSlogan}>{t.trustRole}</span>
-              <p className={styles.heroPortraitDesc}>{t.trustDesc}</p>
+              <p className={styles.heroPortraitDesc} style={{whiteSpace:'pre-line'}}>{t.trustDesc}</p>
             </div>
           </div>
         </div>
