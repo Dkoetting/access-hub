@@ -174,10 +174,11 @@
 }
 
 .heroPortraitDesc {
-  font-size: clamp(1rem, 2vw, 1.2rem);
+  font-size: 0.88rem;
   color: rgba(219,234,254,0.9);
-  line-height: 1.6;
+  line-height: 1.55;
   margin: 4px 0 0;
+  max-width: 340px;
 }
 
 @media (max-width: 768px) {
