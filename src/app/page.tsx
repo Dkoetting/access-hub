@@ -100,31 +100,45 @@ export default function Home() {
           >EN</button>
         </div>
 
-        <div className={styles.headerAuthor}>
+        <div className={styles.headerLogoWrap}>
           <Image
-            src="/dirk-portrait.jpg"
-            alt="Dr. Dirk Kötting"
-            width={44}
-            height={44}
-            className={styles.headerAuthorPhoto}
+            src="/logo-dirk.jpg"
+            alt="Dr. DirKInstitute"
+            width={110}
+            height={38}
+            className={styles.headerLogoRight}
             priority
           />
-          <div className={styles.headerAuthorText}>
-            <span className={styles.headerAuthorName}>Dr. Dirk Kötting</span>
-            <span className={styles.headerAuthorSlogan}>
-              {lang === 'de' ? 'Rechtssicher · Strategisch · Praxisnah' : 'Legally sound · Strategic · Practical'}
-            </span>
-          </div>
         </div>
       </header>
 
       {/* ── Hero ── */}
       <section className={styles.hero}>
-        <p className={styles.heroEyebrow}>{t.eyebrow}</p>
-        <h1 className={styles.heroTitle}>{t.title}</h1>
-        <p className={styles.heroSub}>{t.sub}</p>
-        <a href="/realitaetscheck/" className={styles.heroCta}>{t.cta}</a>
-        <p className={styles.heroTrust}>{t.trustLine}</p>
+        <div className={styles.heroInner}>
+          <div className={styles.heroText}>
+            <p className={styles.heroEyebrow}>{t.eyebrow}</p>
+            <h1 className={styles.heroTitle}>{t.title}</h1>
+            <p className={styles.heroSub}>{t.sub}</p>
+            <a href="/realitaetscheck/" className={styles.heroCta}>{t.cta}</a>
+            <p className={styles.heroTrust}>{t.trustLine}</p>
+          </div>
+          <div className={styles.heroPortrait}>
+            <Image
+              src="/dirk-portrait.jpg"
+              alt="Dr. Dirk Kötting"
+              width={260}
+              height={320}
+              className={styles.heroPortraitImg}
+              priority
+            />
+            <div className={styles.heroPortraitCaption}>
+              <span className={styles.heroPortraitName}>Dr. Dirk Kötting</span>
+              <span className={styles.heroPortraitSlogan}>
+                {lang === 'de' ? 'Rechtssicher · Strategisch · Praxisnah' : 'Legally sound · Strategic · Practical'}
+              </span>
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* ── 3 Blocks ── */}
