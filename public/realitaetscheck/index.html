@@ -392,15 +392,15 @@
               <ul id="resultBullets" style="color:var(--muted);font-size:14px;padding-left:18px;line-height:1.8;"></ul>
 
               <div id="maturityScale" class="maturity-scale">
-                <div class="maturity-step" data-level="1">Level 1<br>Unstrukturiert</div>
-                <div class="maturity-step" data-level="2">Level 2<br>Sensibilisiert</div>
-                <div class="maturity-step" data-level="3">Level 3<br>Etabliert</div>
+                <div class="maturity-step" data-level="1">Level 1<br>Ad-hoc</div>
+                <div class="maturity-step" data-level="2">Level 2<br>Awareness</div>
+                <div class="maturity-step" data-level="3">Level 3<br>Teilw. gesteuert</div>
                 <div class="maturity-step" data-level="4">Level 4<br>Gesteuert</div>
-                <div class="maturity-step" data-level="5">Level 5<br>Belastbar</div>
+                <div class="maturity-step" data-level="5">Level 5<br>Auditfähig</div>
               </div>
 
               <div class="disclaimer">
-                <strong>Hinweis:</strong> Dieses Ergebnis basiert auf Ihren Antworten und stellt eine erste Indikation dar. Eine belastbare fachliche Einordnung und konkrete Handlungsempfehlungen erfolgen im persönlichen Austausch.
+                <strong>Scope:</strong> Erste Governance-Einordnung (keine Rechtsberatung) – inkl. priorisierter Maßnahmen. Die revisionsfeste Einordnung und konkrete Umsetzung erfolgen im persönlichen Austausch.
               </div>
 
               <div class="cta-row" style="margin-top:20px;">
@@ -451,7 +451,7 @@
         <div class="card trust-card">
           <span class="eyebrow">Interpretation</span>
           <h3>Wie Sie den Reifegrad lesen</h3>
-          <p style="color:var(--muted);font-size:14px;line-height:1.7;">Je größer und ausgewogener die Fläche, desto belastbarer ist Ihre KI-Governance. Kritisch sind vor allem hohe Einsatzkomplexität bei gleichzeitig schwacher Nachvollziehbarkeit oder unklarer Verantwortung.</p>
+          <p style="color:var(--muted);font-size:14px;line-height:1.7;">Je größer und ausgewogener die Fläche, desto revisions- und auditfähiger ist Ihre KI-Governance. Kritisch: hohe Einsatzkomplexität bei niedriger Nachvollziehbarkeit – das ist der typische Audit-Fail. Unklare Verantwortlichkeit ist das zweithäufigste Haftungsrisiko.</p>
           <div style="margin-top:20px;padding:16px;background:rgba(37,99,235,0.05);border-radius:8px;border:1px solid var(--border);">
             <p style="font-size:13px;color:var(--primary-dark);font-weight:600;margin-bottom:6px;">Nächster Schritt</p>
             <p style="font-size:13px;color:var(--muted);">Im vertraulichen 30-Minuten-Gespräch klären wir, welche Maßnahmen für Ihre kritischsten Use Cases wirklich nötig sind.</p>
@@ -484,7 +484,7 @@
           <span class="eyebrow">Nächster Schritt</span>
           <h2>Aus Reifegrad wird Führungsfähigkeit</h2>
           <p>Im vertraulichen 30-Minuten-Check klären wir, welche Governance-Maßnahmen für Ihre kritischsten KI-Use-Cases wirklich nötig sind.</p>
-          <p style="font-size:13px;">Das Ergebnis ist eine erste Indikation. Die belastbare Einordnung und Ableitung konkreter Maßnahmen erfolgt im persönlichen Austausch.</p>
+          <p style="font-size:13px;">Erste Governance-Einordnung (kein Rechtsgutachten). Die revisionsfeste Einordnung, konkrete Maßnahmen und Board-taugliche Nachweise entstehen im persönlichen Austausch.</p>
           <div class="cta-row" style="justify-content:center;">
             <a class="btn btn-primary" href="https://terminbuchung-ten.vercel.app/" target="_blank" rel="noopener noreferrer">Termin buchen</a>
             <a class="btn btn-secondary" href="#check">Check erneut starten</a>
@@ -535,20 +535,20 @@
       let statusClass, statusText, title, text, bullets;
 
       if(level <= 2){
-        statusClass = "high"; statusText = "Kritisch";
-        title = "Ihre KI-Nutzung befindet sich noch in einem unreifen Governance-Zustand.";
-        text = "Insbesondere bei Verantwortung, Nachvollziehbarkeit und beherrschter Kritikalität bestehen deutliche Risiken.";
-        bullets = ["Governance-Owner benennen.","Kritische KI-Einsätze inventarisieren.","Mindestdokumentation für Daten, Entscheidungen und Freigaben einführen."];
+        statusClass = "high"; statusText = "Kontrollbedarf: hoch";
+        title = "KI-Einsatz wächst schneller als die Governance – Freigabe-, Haftungs- und Audit-Lücken entstehen.";
+        text = "Insbesondere bei Verantwortlichkeit, Nachvollziehbarkeit und Kritikalitätsbeherrschung bestehen erhebliche Risiken. Wenn Systeme handeln, braucht es klare Rollen, Tool-Rechte, Logging und einen Kill-Switch.";
+        bullets = ["Governance-Owner benennen + Use-Case-Register anlegen (Risikoklasse je Einsatz).","Verantwortlichkeiten festlegen: RACI + Freigabeprozess dokumentieren.","Mindestdokumentation einführen: Decision-Record-Vorlage + Datenbasis."];
       } else if(level >= 4){
-        statusClass = "low"; statusText = "Stabil";
-        title = "Ihre KI-Governance wirkt bereits vergleichsweise gut gesteuert.";
-        text = "Die Grundlagen für belastbare Führbarkeit sind vorhanden. Nun geht es um Konsolidierung, Standardisierung und skalierbare Kontrolle.";
-        bullets = ["Standards über weitere Use Cases ausrollen.","Kontrollmechanismen regelmäßig reviewen.","Audit- und Management-Reporting vereinheitlichen."];
+        statusClass = "low"; statusText = "Risikoprofil: kontrolliert";
+        title = "Ihre KI-Governance ist bereits revisions- und teilweise auditfähig.";
+        text = "Die Steuerungsgrundlagen sind vorhanden. Jetzt geht es um Konsolidierung, Skalierung und lückenlose Nachweisfähigkeit gegenüber Board und Regulatoren.";
+        bullets = ["Governance-Standards auf alle KI-Use-Cases ausrollen.","Kontrollmechanismen regelmäßig reviewen und dokumentieren.","Audit- und Board-Reporting vereinheitlichen und automatisieren."];
       } else {
-        statusClass = "mid"; statusText = "Sensibel";
-        title = "Ihre KI-Nutzung ist teilweise etabliert, aber noch nicht vollständig belastbar.";
-        text = "Grundstrukturen sind erkennbar vorhanden. Für Management-, Revisions- und Auditfähigkeit fehlen konsistente Governance-Mechanismen.";
-        bullets = ["Kritische Use Cases priorisieren und dokumentieren.","Verantwortlichkeiten und Freigabelogik klar festlegen.","Entscheidungslogik und Datengrundlage revisionsfest strukturieren."];
+        statusClass = "mid"; statusText = "Risikoprofil: erhöht";
+        title = "KI-Einsatz teilweise gesteuert – aber noch nicht revisions- und auditfähig.";
+        text = "Grundstrukturen sind erkennbar. Es fehlen konsistente Kontrollen für Management-, Revisions- und Auditfähigkeit. Ohne klare Rollen und Nachweise entstehen Haftungs- und Freigabelücken.";
+        bullets = ["Kritische Use Cases priorisieren: Use-Case-Register + Risikoklasse je Einsatz.","Verantwortlichkeiten festlegen: RACI-Matrix + dokumentierter Freigabeprozess.","Entscheidungslogik absichern: Decision-Record-Vorlage + revisionsfeste Datenbasis."];
       }
 
       document.getElementById("resultBox").classList.add("show");
