@@ -267,7 +267,10 @@ export default function Home() {
                   <span className={styles.priceGross}>{fmt(grossCents)}</span>
                   <span className={styles.priceNet}>({fmt(netCents)} {t.vatLabel})</span>
                 </div>
-                <Link href={`/checkout?app=${app.id}`} className={styles.buyBtnSecondary}>{t.buyBtn}</Link>
+                {app.redirectUrl
+                  ? <a href={app.redirectUrl} className={styles.buyBtnSecondary} target="_blank" rel="noopener noreferrer">{t.buyBtn}</a>
+                  : <Link href={`/checkout?app=${app.id}`} className={styles.buyBtnSecondary}>{t.buyBtn}</Link>
+                }
               </div>
             </div>
           </section>
