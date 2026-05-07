@@ -658,3 +658,394 @@
   align-items: flex-start;
   box-shadow: 0 2px 8px rgba(30,58,138,0.06);
 }
+
+/* ── Hero Bullets ─────────────────────────────────────────────────────────── */
+.heroBullets {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.heroBullet {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 0.97rem;
+  color: rgba(219, 234, 254, 0.92);
+  line-height: 1.5;
+}
+
+.heroBulletCheck {
+  flex-shrink: 0;
+  font-size: 1rem;
+  font-weight: 800;
+  color: #93c5fd;
+  margin-top: 1px;
+}
+
+/* ── Produkttreppe (Staircase) ────────────────────────────────────────────── */
+.staircase {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 28px 0 0;
+}
+
+.step {
+  display: grid;
+  grid-template-columns: 64px 1fr auto;
+  gap: 24px;
+  align-items: center;
+  padding: 28px 32px;
+  background: #fff;
+  border: 1px solid #dbe3f0;
+  border-radius: 16px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 10px rgba(37, 99, 235, 0.06);
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.step:hover {
+  box-shadow: 0 6px 24px rgba(37, 99, 235, 0.13);
+  transform: translateY(-1px);
+}
+
+@media (max-width: 640px) {
+  .step {
+    grid-template-columns: 48px 1fr;
+    grid-template-rows: auto auto;
+  }
+  .stepCtaWrap {
+    grid-column: 1 / -1;
+  }
+}
+
+.stepNumber {
+  font-size: 2rem;
+  font-weight: 900;
+  color: #dbeafe;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  flex-shrink: 0;
+}
+
+.stepContent {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.stepTitle {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #1e3a8a;
+  margin: 0;
+}
+
+.stepProducts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.stepProductTag {
+  display: inline-block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #1d4ed8;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 99px;
+  padding: 3px 11px;
+}
+
+.stepDesc {
+  font-size: 0.9rem;
+  color: #4b5563;
+  margin: 0;
+  line-height: 1.55;
+}
+
+.stepCtaWrap {
+  flex-shrink: 0;
+}
+
+.stepCta {
+  display: inline-block;
+  white-space: nowrap;
+  background: linear-gradient(135deg, #1e3a8a, #2563eb);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.88rem;
+  padding: 10px 20px;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: opacity 0.15s;
+}
+
+.stepCta:hover {
+  opacity: 0.88;
+  color: #fff;
+}
+
+.controlsHint {
+  display: block;
+  margin: 20px 0 0;
+  font-size: 0.85rem;
+  color: #4b5563;
+  padding: 14px 20px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.controlsHint:hover {
+  background: #f0f6ff;
+  border-color: #bfdbfe;
+  color: #1d4ed8;
+}
+
+/* ── Lead Section ─────────────────────────────────────────────────────────── */
+.leadSection {
+  background: linear-gradient(180deg, #f0f6ff 0%, #fff 100%);
+  border-top: 2px solid #dbeafe;
+  padding: 72px 24px 80px;
+}
+
+.leadInner {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.leadTitle {
+  font-size: clamp(1.3rem, 3vw, 1.9rem);
+  font-weight: 900;
+  color: #1e3a8a;
+  margin: 0 0 14px;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.leadSub {
+  font-size: 0.97rem;
+  color: #4b5563;
+  margin: 0 0 36px;
+  line-height: 1.6;
+}
+
+.leadForm {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.leadRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 580px) {
+  .leadRow {
+    grid-template-columns: 1fr;
+  }
+}
+
+.leadLabel {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.leadInput {
+  font-size: 0.95rem;
+  color: #111827;
+  background: #fff;
+  border: 1.5px solid #d1d5db;
+  border-radius: 9px;
+  padding: 10px 14px;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  font-family: inherit;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.leadInput:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.leadInput:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.leadTextarea {
+  resize: vertical;
+  min-height: 96px;
+}
+
+.leadCheckboxLabel {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 0.88rem;
+  color: #374151;
+  cursor: pointer;
+  line-height: 1.5;
+}
+
+.leadCheckbox {
+  flex-shrink: 0;
+  margin-top: 2px;
+  width: 16px;
+  height: 16px;
+  accent-color: #2563eb;
+  cursor: pointer;
+}
+
+/* ── Journey Stage Badge ──────────────────────────────────────────────────── */
+.stageBadge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: #eff6ff;
+  border: 1.5px solid #bfdbfe;
+  border-radius: 10px;
+  font-size: 0.88rem;
+}
+
+.stageBadgePrefix {
+  color: #6b7280;
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+.stageBadgeLabel {
+  color: #1d4ed8;
+  font-weight: 700;
+}
+
+.leadError {
+  font-size: 0.88rem;
+  color: #dc2626;
+  margin: 0;
+  padding: 10px 14px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+}
+
+.leadSubmit {
+  display: block;
+  width: 100%;
+  background: linear-gradient(135deg, #1e3a8a, #2563eb);
+  color: #fff;
+  font-weight: 800;
+  font-size: 1.05rem;
+  padding: 16px 28px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  text-align: center;
+  box-shadow: 0 6px 20px rgba(30, 58, 138, 0.25);
+  transition: opacity 0.15s, transform 0.15s;
+}
+
+.leadSubmit:hover:not(:disabled) {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.leadSubmit:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ── Success Box ──────────────────────────────────────────────────────────── */
+.successBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 48px 32px;
+  background: #f0fdf4;
+  border: 1.5px solid #86efac;
+  border-radius: 16px;
+  text-align: center;
+}
+
+.successIcon {
+  font-size: 2.5rem;
+  font-weight: 900;
+  color: #16a34a;
+  line-height: 1;
+  width: 56px;
+  height: 56px;
+  background: #dcfce7;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.successTitle {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #15803d;
+  margin: 0;
+}
+
+.successText {
+  font-size: 0.97rem;
+  color: #166534;
+  margin: 0;
+  line-height: 1.6;
+}
+
+.successCallWrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #bbf7d0;
+  width: 100%;
+}
+
+.successCallHint {
+  font-size: 0.88rem;
+  color: #166534;
+  margin: 0;
+  opacity: 0.8;
+}
+
+.successCallBtn {
+  display: inline-block;
+  background: #fff;
+  color: #1e3a8a;
+  border: 2px solid #1e3a8a;
+  font-weight: 700;
+  font-size: 0.95rem;
+  padding: 11px 28px;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s;
+}
+
+.successCallBtn:hover {
+  background: #1e3a8a;
+  color: #fff;
+}
