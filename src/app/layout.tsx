@@ -2,8 +2,19 @@
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Access Hub',
-  description: 'Zentrale Registrierung und zeitlich gueltiger Zugang fuer kostenpflichtige Apps',
+  title: 'Dr. DirkInstitute · Board Risk & AI Governance',
+  description: 'Sparringspartner für Vorstände und C-Level: KI-Governance, die schützt, entlastungsfähig ist und Entscheidungssicherheit bei regulatorischen Pflichten schafft.',
+  openGraph: {
+    title: 'Dr. DirkInstitute · Board Risk & AI Governance',
+    description: 'Sparringspartner für Vorstände und C-Level: KI-Governance, die schützt, entlastungsfähig ist und Entscheidungssicherheit bei regulatorischen Pflichten schafft.',
+    type: 'website',
+    locale: 'de_DE',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Dr. DirkInstitute · Board Risk & AI Governance',
+    description: 'Sparringspartner für Vorstände und C-Level: KI-Governance, die schützt, entlastungsfähig ist und Entscheidungssicherheit bei regulatorischen Pflichten schafft.',
+  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

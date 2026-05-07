@@ -1,0 +1,283 @@
+.toolPage {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: radial-gradient(circle at 10% 0%, #e8efff, #f5f7fb 45%);
+}
+
+/* ── Header ──────────────────────────────────────────────── */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 32px;
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid #dbe3f0;
+  gap: 16px;
+}
+
+.headerLogo {
+  height: 38px;
+  width: auto;
+  object-fit: contain;
+}
+
+.headerBrand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1px;
+}
+
+.headerBrandName {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1e3a8a;
+  letter-spacing: -0.01em;
+}
+
+.headerBrandSub {
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: #6b7280;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* ── Back link ────────────────────────────────────────────── */
+.backWrap {
+  padding: 28px 32px 0;
+  max-width: 860px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.back {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #2563eb;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  opacity: 0.85;
+  transition: opacity 0.15s;
+}
+
+.back:hover {
+  opacity: 1;
+}
+
+/* ── Main content ─────────────────────────────────────────── */
+.content {
+  flex: 1;
+  max-width: 860px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 32px 32px 64px;
+}
+
+/* ── Hero block ───────────────────────────────────────────── */
+.toolHero {
+  margin-bottom: 40px;
+}
+
+.toolIcon {
+  font-size: 3rem;
+  line-height: 1;
+  margin-bottom: 12px;
+  display: block;
+}
+
+.toolStepBadge {
+  display: inline-block;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #2563eb;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 20px;
+  padding: 3px 12px;
+  margin-bottom: 14px;
+}
+
+.toolTitle {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #1e3a8a;
+  line-height: 1.15;
+  margin: 0 0 14px;
+}
+
+.toolTagline {
+  font-size: 1.15rem;
+  color: #374151;
+  line-height: 1.55;
+  margin: 0;
+  max-width: 660px;
+}
+
+/* ── Divider ──────────────────────────────────────────────── */
+.divider {
+  border: none;
+  border-top: 1px solid #dbe3f0;
+  margin: 32px 0;
+}
+
+/* ── Section cards ────────────────────────────────────────── */
+.section {
+  background: #ffffff;
+  border: 1px solid #dbe3f0;
+  border-radius: 14px;
+  padding: 28px 32px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 12px rgba(29,78,216,0.05);
+}
+
+.sectionTitle {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #1e3a8a;
+  margin: 0 0 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sectionTitle::before {
+  content: '';
+  display: block;
+  width: 3px;
+  height: 18px;
+  background: #2563eb;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+/* ── Benefit list ─────────────────────────────────────────── */
+.benefits {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.benefit {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 0.97rem;
+  color: #374151;
+  line-height: 1.5;
+}
+
+.benefitCheck {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  background: #2563eb;
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-weight: 700;
+  margin-top: 2px;
+}
+
+/* ── Target group ─────────────────────────────────────────── */
+.targets {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.target {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 0.97rem;
+  color: #374151;
+  line-height: 1.5;
+}
+
+.targetDot {
+  flex-shrink: 0;
+  width: 6px;
+  height: 6px;
+  background: #2563eb;
+  border-radius: 50%;
+  margin-top: 8px;
+}
+
+/* ── CTA section ──────────────────────────────────────────── */
+.ctaSection {
+  background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+  border-radius: 14px;
+  padding: 32px;
+  text-align: center;
+  margin-top: 12px;
+}
+
+.ctaTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 8px;
+}
+
+.ctaSub {
+  font-size: 0.95rem;
+  color: rgba(255,255,255,0.8);
+  margin: 0 0 24px;
+}
+
+.ctaBtn {
+  display: inline-block;
+  background: #ffffff;
+  color: #1e3a8a;
+  font-size: 1rem;
+  font-weight: 700;
+  padding: 14px 32px;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.ctaBtn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+  color: #1e3a8a;
+}
+
+/* ── Footer ───────────────────────────────────────────────── */
+.footer {
+  border-top: 1px solid #dbe3f0;
+  padding: 20px 32px;
+  text-align: center;
+  font-size: 0.82rem;
+  color: #9ca3af;
+}
+
+/* ── Responsive ───────────────────────────────────────────── */
+@media (max-width: 600px) {
+  .header { padding: 10px 16px; }
+  .backWrap { padding: 20px 16px 0; }
+  .content { padding: 20px 16px 48px; }
+  .toolTitle { font-size: 1.6rem; }
+  .section { padding: 20px 18px; }
+  .ctaSection { padding: 24px 18px; }
+}

@@ -8,7 +8,7 @@ const T = {
   de: {
     eyebrow:        'KI Governance · Agenten-Kontrolle · Entscheidungssicherheit',
     title:          'Wenn Agenten handeln, ist es nicht mehr nur KI – es ist operatives Risiko.',
-    sub:            'Wir machen KI- und Agenten-Einsatz prüfbar: Risikoklasse, Pflichten, Kontrollen, Verantwortlichkeiten – in einem klaren Governance-Output.',
+    sub:            'Sparringspartner für Vorstände und C-Level: KI-Governance, die schützt, entlastungsfähig ist und Entscheidungssicherheit bei regulatorischen Pflichten schafft.',
     heroCta:        'In 5 Minuten: KI-Risiko & Pflichten einschätzen →',
     trustLine:      'Keine Registrierung · Sofortiger Start · Board-taugliches Ergebnis',
     heroBullets: [
@@ -38,7 +38,10 @@ const T = {
         number:   '01',
         stage:    'ersteinschaetzung',
         title:    'Ersteinschätzung',
-        products: ['🚦 AI Traffic Seven', '📋 Governance-Kurzlage'],
+        products: [
+          { label: '🚦 AI Traffic Seven',   href: '/tools/ai-traffic-seven' },
+          { label: '📋 Governance-Kurzlage', href: '/tools/governance-kurzlage' },
+        ],
         desc:     'Schnelle Ersteinschätzung: Wo stehen Sie heute bei KI-Risiko, Pflichten und Use-Cases?',
         cta:      'Governance-Kurzlage anfordern →',
       },
@@ -46,7 +49,10 @@ const T = {
         number:   '02',
         stage:    'struktur_aufbauen',
         title:    'Struktur schaffen',
-        products: ['⚖️ EU AI Act Navigator', '🛡️ AI Safe Policy Generator'],
+        products: [
+          { label: '⚖️ EU AI Act Navigator',        href: '/tools/eu-ai-act-navigator' },
+          { label: '🛡️ AI Safe Policy Generator', href: '/tools/ai-safe-policy-generator' },
+        ],
         desc:     'Pflichten, Rollen und Policies strukturiert aufsetzen – EU-AI-Act-ready.',
         cta:      'Struktur aufbauen →',
       },
@@ -54,7 +60,10 @@ const T = {
         number:   '03',
         stage:    'umsetzung_starten',
         title:    'Umsetzung & Wirkung',
-        products: ['🧠 K² Kausale Kompetenz', '📊 KI ROI Rechner'],
+        products: [
+          { label: '🧠 K² Kausale Kompetenz', href: '/tools/k2-kausale-kompetenz' },
+          { label: '📊 KI ROI Rechner',        href: '/tools/ki-roi-rechner' },
+        ],
         desc:     'Board-Readiness, Causal Literacy und Business Case der KI-Agenten messbar machen.',
         cta:      'Umsetzung starten →',
       },
@@ -87,7 +96,7 @@ const T = {
   en: {
     eyebrow:        'AI Governance · Agent Control · Decision Confidence',
     title:          'When agents act, it\'s no longer just AI – it\'s operational risk.',
-    sub:            'We make AI and agent deployment auditable: risk class, obligations, controls, responsibilities – in a clear governance output.',
+    sub:            'Strategic partner for boards and C-level: AI governance that protects, enables accountability and creates decision confidence in regulatory obligations.',
     heroCta:        'In 5 Minutes: Assess Your AI Risk & Obligations →',
     trustLine:      'No registration · Instant start · Board-ready output',
     heroBullets: [
@@ -117,7 +126,10 @@ const T = {
         number:   '01',
         stage:    'ersteinschaetzung',
         title:    'Initial Assessment',
-        products: ['🚦 AI Traffic Seven', '📋 Governance Brief'],
+        products: [
+          { label: '🚦 AI Traffic Seven',   href: '/tools/ai-traffic-seven' },
+          { label: '📋 Governance Brief',    href: '/tools/governance-kurzlage' },
+        ],
         desc:     'Initial assessment: where do you stand today on AI risk, obligations and use cases?',
         cta:      'Request Governance Brief →',
       },
@@ -125,7 +137,10 @@ const T = {
         number:   '02',
         stage:    'struktur_aufbauen',
         title:    'Build Structure',
-        products: ['⚖️ EU AI Act Navigator', '🛡️ AI Safe Policy Generator'],
+        products: [
+          { label: '⚖️ EU AI Act Navigator',        href: '/tools/eu-ai-act-navigator' },
+          { label: '🛡️ AI Safe Policy Generator', href: '/tools/ai-safe-policy-generator' },
+        ],
         desc:     'Set up obligations, roles and policies in a structured way – EU AI Act ready.',
         cta:      'Build structure →',
       },
@@ -133,7 +148,10 @@ const T = {
         number:   '03',
         stage:    'umsetzung_starten',
         title:    'Implementation & Impact',
-        products: ['🧠 K² Causal Competence', '📊 AI ROI Calculator'],
+        products: [
+          { label: '🧠 K² Causal Competence', href: '/tools/k2-kausale-kompetenz' },
+          { label: '📊 AI ROI Calculator',     href: '/tools/ki-roi-rechner' },
+        ],
         desc:     'Make board-readiness, causal literacy and the business case for AI agents measurable.',
         cta:      'Start implementation →',
       },
@@ -239,6 +257,11 @@ export default function Home() {
             className={styles.headerLogoLeft}
             priority
           />
+        </div>
+
+        <div className={styles.headerCenter}>
+          <span className={styles.headerBrandName}>Dr. DirkInstitute</span>
+          <span className={styles.headerBrandSub}>Board Risk &amp; AI Governance</span>
         </div>
 
         <div className={styles.langToggle}>
@@ -354,7 +377,9 @@ export default function Home() {
                 <h3 className={styles.stepTitle}>{step.title}</h3>
                 <div className={styles.stepProducts}>
                   {step.products.map((p) => (
-                    <span key={p} className={styles.stepProductTag}>{p}</span>
+                    <a key={p.label} href={p.href} className={styles.stepProductTag}>
+                      {p.label}
+                    </a>
                   ))}
                 </div>
                 <p className={styles.stepDesc}>{step.desc}</p>

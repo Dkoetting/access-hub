@@ -34,6 +34,37 @@
   border-radius: 6px;
 }
 
+/* ── Header Center (Brand Name) ───────────────────────────────────────────── */
+.headerCenter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  flex: 1;
+  text-align: center;
+}
+
+.headerBrandName {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+.headerBrandSub {
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: rgba(147, 197, 253, 0.85);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 640px) {
+  .headerBrandName { font-size: 0.82rem; }
+  .headerBrandSub  { display: none; }
+}
+
 /* ── Lang Toggle ─────────────────────────────────────────────────────────── */
 .langToggle {
   display: flex;
@@ -760,6 +791,14 @@
   border: 1px solid #bfdbfe;
   border-radius: 99px;
   padding: 3px 11px;
+  text-decoration: none;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.stepProductTag:hover {
+  background: #dbeafe;
+  border-color: #93c5fd;
+  color: #1e40af;
 }
 
 .stepDesc {
