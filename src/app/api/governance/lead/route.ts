@@ -134,21 +134,52 @@ export async function POST(req: NextRequest) {
     })
 
     // Bestätigung an Nutzer
-    await resend.emails.send({
-      from:    `Dr. DirKInstitute <${FROM_EMAIL}>`,
-      to:      email,
-      subject: txt.confirmSubject,
-      html: `
-        <p>${txt.confirmGreeting(name)}</p>
-        <p>${txt.confirmBody}</p>
+    const stageLabel    = journeyStage ? (STAGE_LABELS[journeyStage] ?? journeyStage) : null
+    const BOOKING_URL   = 'https://terminbuchung-ten.vercel.app/'
+
+    const confirmHtml = lang === 'de'
+      ? `
+        <p style="font-size:1rem;color:#1f2937">Hallo ${name},</p>
+        <p style="color:#374151;line-height:1.7">
+          Ihre Anfrage ist eingegangen.${stageLabel
+            ? ` Auf Basis Ihres gewählten Einstiegs — <strong>${stageLabel}</strong> — bereite ich ein kompaktes Lagebild zu Ihrer KI-Risikoklasse und den relevanten regulatorischen Pflichten vor.`
+            : ' Ich bereite ein kompaktes Lagebild zu Ihrer KI-Risikoklasse und den relevanten regulatorischen Pflichten vor.'}
+        </p>
+        <p style="color:#374151;line-height:1.7">
+          Sie können in der Zwischenzeit direkt einen Termin buchen:<br>
+          <a href="${BOOKING_URL}" style="color:#2563eb;font-weight:600">${BOOKING_URL}</a>
+        </p>
+        <p style="color:#374151">Ich melde mich binnen 48 Stunden.</p>
         <hr style="margin:20px 0;border:none;border-top:1px solid #e5e7eb">
         <p style="font-size:0.9em;color:#374151">
-          ${txt.confirmSign}<br>
           <b>Dr. Dirk Kötting</b><br>
-          Dr. DirKInstitute · <a href="mailto:${FROM_EMAIL}" style="color:#1d4ed8">${FROM_EMAIL}</a>
+          Dr. DirKInstitute · KI-Beratung &amp; Governance
         </p>
-        <p style="font-size:0.75em;color:#9ca3af">${txt.confirmTagline}</p>
-      `,
+      `
+      : `
+        <p style="font-size:1rem;color:#1f2937">Hello ${name},</p>
+        <p style="color:#374151;line-height:1.7">
+          Your request has been received.${stageLabel
+            ? ` Based on your chosen entry point — <strong>${stageLabel}</strong> — I am preparing a compact situational assessment of your AI risk class and the relevant regulatory obligations.`
+            : ' I am preparing a compact situational assessment of your AI risk class and the relevant regulatory obligations.'}
+        </p>
+        <p style="color:#374151;line-height:1.7">
+          In the meantime, you can book an appointment directly:<br>
+          <a href="${BOOKING_URL}" style="color:#2563eb;font-weight:600">${BOOKING_URL}</a>
+        </p>
+        <p style="color:#374151">I will be in touch within 48 hours.</p>
+        <hr style="margin:20px 0;border:none;border-top:1px solid #e5e7eb">
+        <p style="font-size:0.9em;color:#374151">
+          <b>Dr. Dirk Kötting</b><br>
+          Dr. DirKInstitute · AI Consulting &amp; Governance
+        </p>
+      `
+
+    await resend.emails.send({
+      from:    `Dr. Dirk Kötting <${FROM_EMAIL}>`,
+      to:      email,
+      subject: txt.confirmSubject,
+      html:    confirmHtml,
     })
   } catch (mailErr) {
     console.error('[governance/lead] mail error', mailErr)
