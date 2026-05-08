@@ -302,7 +302,7 @@ export default function Home() {
                 </li>
               ))}
             </ul>
-            <a href="#governance-kurzlage" className={styles.heroCta}>
+            <a href="/realitaetscheck/" className={styles.heroCta}>
               {t.heroCta}
             </a>
             <p className={styles.heroTrust}>{t.trustLine}</p>
